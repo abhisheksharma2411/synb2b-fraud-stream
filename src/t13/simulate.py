@@ -275,6 +275,9 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
     block_start = n0
 
     infeasible_flags: List[int] = []
+    oracle_flags: List[int] = []
+    flag_days: List[float] = []
+    flag_etrue: List[float] = []
     update_times: List[float] = []
     comp_series: List[dict] = []
     demand_review = np.zeros(n, dtype=np.int8)
@@ -345,7 +348,31 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
         cdf = calib.accumulate(calib.bin_of(grid, sc_recent), np.ones(len(sc_recent)), G)
         cdf = cdf / max(cdf[-1], 1.0)
 
+        # Oracle feasibility, for validating the flag rather than for driving it.
+        # Timed out of the update: t0 is advanced by however long this takes, so the
+        # reported per-update cost stays the cost of the calibration update itself and
+        # not of the validation instrumentation wrapped around it.
+        _t_oracle = time.perf_counter()
+        # Proposition 1 evaluated on the TRUE risk curve of this window: the tightest
+        # admissible release threshold is the hold-cap floor, so (alpha, b) was
+        # attainable here exactly when the true risk at that floor clears alpha.
+        # Nothing below is fed back into any decision; it exists to be scored.
+        _band_o = pol.budget * (1.0 - eps)
+        _g_floor_o = calib.invert_cdf(cdf, 1.0 - pol.block_cap - _band_o)
+        _bins_o = calib.bin_of(grid, scores[idx_all])
+        _w_o = calib.decay_weights(d - days[idx_all], pol.rho)
+        _den_o = calib.accumulate(_bins_o, _w_o, G)
+        _num_o = calib.accumulate(_bins_o, _w_o * y[idx_all].astype(float), G)
+        if _den_o[_g_floor_o] >= pol.min_support:
+            _r_o = float(_num_o[_g_floor_o] / max(_den_o[_g_floor_o], 1e-12))
+            oracle_infeasible = int(_r_o > pol.alpha)
+        else:
+            _r_o = float("nan")
+            oracle_infeasible = -1          # undetermined: too little support to judge
+        t0 += time.perf_counter() - _t_oracle
+
         infeasible = 0
+        e_true = float("nan")
         if len(idx) >= pol.min_calib_items:
             if uses_iap:
                 # Horvitz-Thompson. The denominator counts every decision taken in the
@@ -470,14 +497,20 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                 "n_explore": int(np.sum(ch == CH_EXPLORE)),
                 "tau_lo": float(tau_lo), "tau_hi": float(tau_hi),
                 "alpha_t": float(alpha_t), "infeasible": int(infeasible),
+                "oracle_infeasible": int(oracle_infeasible),
+                "oracle_floor_risk": float(_r_o),
                 "e_t": float(e_t), "e_true": float(e_true),
             })
         infeasible_flags.append(infeasible)
+        oracle_flags.append(oracle_infeasible)
+        flag_days.append(float(d))
+        flag_etrue.append(float(e_true))
         update_times.append(time.perf_counter() - t0)
 
     summary = _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
                          infeasible_flags, update_times, comp_series, eps,
-                         delay_scale_mult, disclose_mult, oracle_pd)
+                         delay_scale_mult, disclose_mult, oracle_pd,
+                         oracle_flags, flag_days, flag_etrue)
     if keep_arrays:
         # evaluation-stream slices, for the invariant tests. Never serialised.
         sl2 = slice(n0, n)
@@ -492,9 +525,73 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
 
 
 # ---------------------------------------------------------------------------
+
+def _score_flag(flags, oracle, days, etrue, ctx) -> dict:
+    """Score the budget-infeasibility flag against oracle feasibility.
+
+    The oracle is Proposition 1 evaluated on the window's true risk curve, so this
+    asks a narrow question: when the target genuinely was not attainable at this
+    capacity, did the policy say so? Windows where the true curve has too little
+    support at the hold-cap floor are marked undetermined and excluded rather than
+    guessed at.
+    """
+    out = {"flag_n_scored": 0, "flag_undetermined": 0}
+    if not flags or not oracle:
+        return out
+    f = np.asarray(flags, dtype=int)
+    o = np.asarray(oracle, dtype=int)
+    d = np.asarray(days, dtype=float)
+    ok = o >= 0
+    out["flag_undetermined"] = int((~ok).sum())
+    if not ok.any():
+        return out
+    f, o, d_ok = f[ok], o[ok], d[ok]
+    tp = int(((f == 1) & (o == 1)).sum())
+    fp = int(((f == 1) & (o == 0)).sum())
+    fn = int(((f == 0) & (o == 1)).sum())
+    tn = int(((f == 0) & (o == 0)).sum())
+    rec = tp / max(tp + fn, 1)
+    spec = tn / max(tn + fp, 1)
+    out.update({
+        "flag_n_scored": int(ok.sum()),
+        "oracle_infeasible_rate": float(o.mean()),
+        "flag_tp": tp, "flag_fp": fp, "flag_fn": fn, "flag_tn": tn,
+        "flag_precision": float(tp / max(tp + fp, 1)) if (tp + fp) else None,
+        "flag_recall": float(rec) if (tp + fn) else None,
+        "flag_specificity": float(spec) if (tn + fp) else None,
+        "flag_balanced_acc": float(0.5 * (rec + spec)) if (tp + fn) and (tn + fp) else None,
+        "flag_false_infeasible_rate": float(fp / max(fp + tn, 1)) if (fp + tn) else None,
+        "flag_missed_infeasible_rate": float(fn / max(tp + fn, 1)) if (tp + fn) else None,
+    })
+    # true release-region risk in flagged vs unflagged windows
+    et = np.asarray(etrue if etrue is not None else [], dtype=float)
+    if len(et) == len(ok):
+        et = et[ok]
+        m1, m0 = (f == 1) & np.isfinite(et), (f == 0) & np.isfinite(et)
+        out["risk_when_flagged"] = float(et[m1].mean()) if m1.any() else None
+        out["risk_when_not_flagged"] = float(et[m0].mean()) if m0.any() else None
+    # detection delay: first flag after the oracle turns infeasible, per drift event
+    for ev in getattr(ctx, "events", []) or []:
+        ev_day = float(ev["day"] if isinstance(ev, dict) else ev.day)
+        kind = ev["kind"] if isinstance(ev, dict) else ev.kind
+        after = d_ok >= ev_day
+        if not after.any():
+            continue
+        o_idx = np.nonzero(after & (o == 1))[0]
+        f_idx = np.nonzero(after & (f == 1))[0]
+        if len(o_idx) == 0:
+            out[f"flag_delay_{kind}"] = None          # oracle never infeasible after it
+            continue
+        first_o = d_ok[o_idx[0]]
+        later = f_idx[d_ok[f_idx] >= first_o] if len(f_idx) else np.array([], dtype=int)
+        out[f"flag_delay_{kind}"] = float(d_ok[later[0]] - first_o) if len(later) else None
+    return out
+
+
 def _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
                infeasible_flags, update_times, comp_series, eps,
-               delay_scale_mult, disclose_mult, oracle_pd=False) -> dict:
+               delay_scale_mult, disclose_mult, oracle_pd=False,
+               oracle_flags=None, flag_days=None, flag_etrue=None) -> dict:
     n0, n = ctx.n_train, ctx.n
     sl = slice(n0, n)
     a = action[sl]
@@ -672,6 +769,7 @@ def _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
         "frac_blocks_over_alpha": float(np.mean(for_series > pol.alpha)) if nb else None,
         "infeasible_rate": float(np.mean(infeasible_flags)) if infeasible_flags else 0.0,
         "n_updates": len(infeasible_flags),
+        **_score_flag(infeasible_flags, oracle_flags, flag_days, flag_etrue, ctx),
         "post_event": post,
         "by_regime": by_regime,
         "estimator_bias": est_bias,

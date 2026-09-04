@@ -32,6 +32,9 @@ CI_METRICS = [
     "coverage_mean_abs_dev", "coverage_max_dev", "frac_blocks_over_alpha",
     "bias_ratio_warm", "lag_ratio_warm", "update_us_p50", "update_us_p99",
     "explore_rate", "n_explore", "concept_for", "prior_for", "covariate_for",
+    # flag validation against oracle feasibility
+    "oracle_infeasible_rate", "flag_precision", "flag_recall", "flag_specificity",
+    "flag_balanced_acc", "risk_when_flagged", "risk_when_not_flagged",
 ]
 
 
@@ -45,6 +48,13 @@ def _flatten(r: dict) -> dict:
         "review_demand_overshoot", "review_demand_max_block",
         "frac_blocks_demand_over_budget", "n_eval", "n_pos_eval",
         "calib_w_review_final", "calib_w_ledger_final", "calib_w_explore_final",
+        # flag validation against oracle feasibility
+        "flag_n_scored", "flag_undetermined", "oracle_infeasible_rate",
+        "flag_tp", "flag_fp", "flag_fn", "flag_tn",
+        "flag_precision", "flag_recall", "flag_specificity", "flag_balanced_acc",
+        "flag_false_infeasible_rate", "flag_missed_infeasible_rate",
+        "risk_when_flagged", "risk_when_not_flagged",
+        "flag_delay_covariate", "flag_delay_concept", "flag_delay_prior",
     )}
     br = r.get("by_regime", {})
     for k in ("quiet", "covariate", "concept", "prior"):

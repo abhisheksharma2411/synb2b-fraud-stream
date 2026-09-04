@@ -470,3 +470,30 @@ description of a correct method is still a defect, and it invites exactly the
 objection it received. It also means an external reviewer reading only the PDF had no
 way to tell the two apart, which is the argument for putting the estimator in the
 paper rather than in the artefact.
+
+**D-41. The infeasibility flag is now validated, and it is the one place M5 wins
+outright.** Oracle feasibility is Proposition 1 evaluated per window on the true risk
+curve: with `q = 1 - beta - b(1-eps)`, the pair was attainable exactly when the true
+risk at `F^-1(q)` clears `alpha`. Scored against it over 320 windows, M5 reaches
+precision 0.900, recall 0.868 and balanced accuracy 0.906, against M3 at 0.853 and M4
+at 0.736. M2 records a perfect recall of 1.000 by flagging 0.924 of windows, which
+leaves its specificity at 0.116. True risk in flagged windows is 0.02206 against
+0.009356 in unflagged ones. Full table in `INFEASIBILITY_VALIDATION.md`.
+
+M0 and M1 never update, so they have no windows to score. The paper previously read
+their flag rate of 0 as M0 "declaring none", which was misleading: it is the absence
+of a mechanism.
+
+**D-42. Two bugs I introduced while adding the instrumentation, both caught by
+diffing against the pre-instrumentation results.** The oracle computation sat inside
+the timed region, so every `update_us` figure was inflated: 448 values moved, and all
+448 were timing. `t0` now advances by the oracle's duration, and the re-measured cost
+is 18.03 us at p50 against the 18.36 previously reported. Separately, `e_true` is only
+defined inside the estimator branch, so the risk-when-flagged split silently produced
+nothing; it is now recorded per update.
+
+The decisive check is that the same diff showed **zero non-timing changes**: every
+FOR, ratio, review rate and cost is bit-identical to the run before the oracle
+existed. `tests/test_flag_validation.py` asserts the same property directly by
+stubbing the scorer. An oracle that reads latent `y` and could influence a decision
+would make the whole experiment circular, so this is the property that had to hold.

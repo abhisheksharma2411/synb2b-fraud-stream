@@ -26,7 +26,7 @@ Seeds: [11, 23, 37, 53, 71].  Reduced-size pass: False.
 | M5 (ACI-BUDGET-CRC-IAP) | 0.020637 [0.020379, 0.020810] | 0.012511 [0.012189, 0.012854] | 0.02269 [0.02104, 0.02395] | 0.02830 [0.02398, 0.03317] | 0.3412 [0.3200, 0.3650] | 172992.92 [170299.06, 175686.79] | 0.8814 [0.8339, 0.9287] |
 | M5_oracle (M5 with oracle propensity) | 0.021091 [0.020808, 0.021268] | 0.012828 [0.012599, 0.013054] | 0.02216 [0.02063, 0.02351] | 0.01822 [0.01395, 0.02231] | 0.2237 [0.1919, 0.2556] | 178527.34 [174590.13, 182464.56] | 1.0714 [1.0533, 1.0925] |
 
-- M5 calibration update: p50 18.36 [17.99, 18.59] us, p99 26.44 [25.47, 27.34] us per transaction (amortised over 250 transactions)
+- M5 calibration update: p50 18.03 [17.63, 18.44] us, p99 25.53 [24.08, 27.67] us per transaction (amortised over 250 transactions)
 - M5 fraud value allowed through: 18483140 [18189283, 18776997] of 30,002,619 total
 - per-topology miss rate under M5 (share of that topology's fraud auto-allowed):
   - D_drift_induced: 0.9478 [0.9394, 0.9569] over 847.0 items
@@ -56,7 +56,7 @@ Seeds: [11, 23, 37, 53, 71].  Reduced-size pass: False.
 | M5 (ACI-BUDGET-CRC-IAP) | 0.000903 [0.000865, 0.000938] | 0.000300 [0.000291, 0.000309] | 0.02065 [0.02052, 0.02079] | 0.02656 [0.02465, 0.02896] | 0.3377 [0.3122, 0.3688] | 469.09 [427.44, 516.73] | 0.9442 [0.8773, 1.0117] |
 | M5_oracle (M5 with oracle propensity) | 0.000924 [0.000877, 0.000952] | 0.000305 [0.000296, 0.000314] | 0.02059 [0.02050, 0.02070] | 0.02092 [0.01704, 0.02417] | 0.2621 [0.2099, 0.3047] | 452.92 [411.68, 508.38] | 1.2663 [1.1566, 1.3761] |
 
-- M5 calibration update: p50 20.24 [20.15, 20.31] us, p99 28.39 [23.14, 37.78] us per transaction (amortised over 250 transactions)
+- M5 calibration update: p50 19.79 [19.55, 20.00] us, p99 23.92 [21.92, 25.91] us per transaction (amortised over 250 transactions)
 - M5 fraud value allowed through: 75523 [65335, 85256] of 133,975 total
 - per-topology miss rate under M5 (share of that topology's fraud auto-allowed):
   - D_drift_induced: 0.9269 [0.9198, 0.9361] over 163.0 items
@@ -159,9 +159,9 @@ Seeds: [11, 23, 37, 53, 71].  Reduced-size pass: False.
 - Python 3.14.7 on macOS-26.5.1-arm64-arm-64bit-Mach-O (arm64)
 - CPU: Apple M4 Pro, 12 logical cores
 - packages: lightgbm 4.7.0, numpy 2.5.2, pandas 3.0.5, pyarrow 25.0.1, scikit-learn 1.9.0, scipy 1.18.1
-- git commit at the time of the run: 04d18c5950de6be5e0e7046e4e0f1499d06b0b9e  (working tree dirty)
+- git commit at the time of the run: 0610743c0d59394de34dc37f7f099c6def220bb9  (working tree dirty)
   This is the commit the grid executed at, not the commit that carries this file; later commits added the paper and did not recompute any number here.
-- total wall clock: 1134.4 s
-- generated: 2026-09-04T01:52:33Z
+- total wall clock: 5401.8 s
+- generated: 2026-09-04T10:05:55Z
 - bootstrap: 10,000 resamples, percentile method
 
