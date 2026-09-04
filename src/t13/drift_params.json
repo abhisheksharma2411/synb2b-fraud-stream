@@ -1,0 +1,26 @@
+{
+  "synb2b": {
+    "a0": -7.2467,
+    "beta_flipped": -4.7535,
+    "lambda_peak": 6.5951,
+    "_quiet_base_rate": 0.019059,
+    "_expected_quiet_induced": 53.9,
+    "_expected_concept_induced": 492.0,
+    "_expected_prior_induced": 310.7,
+    "_concept_established_share": 0.9971,
+    "_concept_target_rate": 0.04193,
+    "_prior_target_rate": 0.064801
+  },
+  "ulb": {
+    "a0": -9.7747,
+    "beta_flipped": -5.5949,
+    "lambda_peak": 6.4289,
+    "_quiet_base_rate": 0.001519,
+    "_expected_quiet_induced": 13.3,
+    "_expected_concept_induced": 70.8,
+    "_expected_prior_induced": 77.3,
+    "_concept_established_share": 0.9964,
+    "_concept_target_rate": 0.003343,
+    "_prior_target_rate": 0.005166
+  }
+}
