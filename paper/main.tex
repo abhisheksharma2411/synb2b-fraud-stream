@@ -324,7 +324,8 @@ The propensity enters the numerator alone, inflating each surfaced fraud so that
 stands for the ones still sitting inside the reconciliation window and not yet visible
 to anybody. Trimming at $\pi_0$ drops items from both sums, so \eqref{eq:est} targets the overlap
 population $\{\pi_i \ge \pi_0\}$, exponentially weighted rather than the trailing-
-window mean of Section~\ref{sec:prob}.
+window mean of Section~\ref{sec:prob}. That gap is measured: the estimand sits 0.07896 from the trailing-window risk in
+relative terms, and trimming removes 0.1508 of rows carrying 0.1838 of their fraud.
 
 \begin{figure}[t]
 \centering
@@ -368,10 +369,9 @@ The recursion is the Gibbs--Cand\`es one, driven by the lagged, reweighted strea
 \alpha_{t+1} = \alpha_t + \gamma\,(\alpha - \mathrm{err}_t),
 \end{equation}
 with $\tau_{\mathrm{lo}}$ read off the reweighted curve, as a quantile (M3) or through
-a conformal-risk-control threshold search over the same window (M4, M5). A candidate
-counts only if at least $200$ units of calibration weight sit at or below it, since
-certifying a one-in-a-hundred risk from a dozen observations is small arithmetic
-rather than conservatism.
+a conformal-risk-control threshold search over the same window (M4, M5). A candidate counts only if at least $200$ units of calibration weight sit at or below
+it, since certifying a one-in-a-hundred risk from a dozen observations is small
+arithmetic rather than conservatism. 
 
 Capacity is enforced separately. Given $\tau_{\mathrm{lo}}$, the upper threshold
 $\tau_{\mathrm{hi}}$ is placed by an online quantile so the band carries
@@ -592,8 +592,8 @@ Capacity holds only after projection: M5's demand averages 0.022695 against the 
 of 0.0200 and exceeds it in 0.44 of windows, while the served load is 0.01806.
 Cost is 172993 against 161420 for M2, the most expensive adaptive method.
 Fraud value released is 18,483,140 of 30,002,619, against 24,417,614 under the static
-rule. The update costs 17.98 microseconds at p50 and 25.65 at p99, the one measurement here
-that is not bit-reproducible.
+rule. The update costs 18.62 microseconds at p50 and 26.47 at p99, the only figure here not
+bit-reproducible.
 
 \begin{figure}[t]
 \centering
@@ -659,16 +659,11 @@ $\varepsilon$ & $n_{\exp}$ & Bias & 95\% CI & quiet FOR & hold & cost/1k\\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:eps} carries the exploration ablation, which speaks to
-Proposition~\ref{prop:ident}. Bias climbs monotonically with $\varepsilon$ over most
-of the range, from 0.871 at no exploration to 0.937 at 0.400 and 0.970 at 0.600,
-while quiet-regime risk drifts up from 0.01237 to 0.01309 as capacity moves out of the
-band. The trend is real, the step at the operating point is not: 0.871 [0.823, 0.917] at no
-exploration against 0.881 [0.834, 0.929] at 0.120 is a gain of 0.010 with intervals
-that overlap almost entirely, so most of the distance from M4's 0.0518 comes from the
-propensity correction. Exploration supplies the identification and, at this budget,
-little else. The 0.120 was fixed as an operating assumption before the ablation ran. Neither proposition was rewritten to
-match a measurement, and the gap is stated rather than closed.
+Table~\ref{tab:eps} carries the exploration ablation. The trend is real, the step is
+not: 0.871 [0.823, 0.917] at no exploration against 0.881 [0.834, 0.929] at 0.120 is a
+gain of 0.010 with overlapping intervals, so most of the distance from M4's 0.0518
+comes from the propensity correction rather than the 0.120, which was fixed as an
+operating assumption before the ablation ran.
 
 One ablation came out backwards. Set the delay multiplier to 0 so every label arrives
 the instant the decision is taken, and the flag fires in 1.0000 of windows against
@@ -681,9 +676,9 @@ related effect: at a multiplier of 2.4 the corrected ratio degrades from 0.881 t
 
 Misses split by topology as disclosure does: wire redirection surfaces 0.86 of the
 time and is missed at 0.0902, payment-term manipulation surfaces at 0.19 and is missed
-at 0.649, drift-induced fraud at 0.948. The policy is blindest where the ledger is
-quietest. Recovery takes 18.32 days after the covariate shift; after the concept and
-prior events realised risk never returns to target.
+at 0.649, and drift-induced fraud at 0.948, so the policy is blindest where the ledger
+is quietest. Recovery takes 18.32 days after the covariate shift and never arrives
+after the other two.
 
 \begin{table}[t]
 \caption{Cross-dataset transfer to the ULB card portfolio, $\alpha = 0.000930$.
@@ -703,10 +698,11 @@ Method & FOR & quiet & dem. & served & Infeas. & USD/1k & ratio\\
 \end{table}
 
 Table~\ref{tab:ulb} reproduces the shape on a much rarer positive class and shows a
-limit. M5 reaches a ratio of 0.944 where uncorrected M4 already sits at 0.883, and the
-oracle overshoots to 1.27. That portfolio has no topology annotation and disclosure
-depends on amount alone, so the propensity is nearly flat and little is left to undo.
-The method earns its keep where the disclosure law varies across the population; where it does not, it costs 19.56 microseconds at p50 rather than 9.39 for nothing.
+limit: M5 reaches a ratio of 0.944 where uncorrected M4 already sits at 0.883, and the
+oracle overshoots to 1.27, because that portfolio has no topology annotation and
+disclosure depends on amount alone, leaving the propensity nearly flat and little for
+the correction to undo.
+The method earns its keep where the disclosure law varies across the population; where it does not, it costs 20.06 microseconds at p50 rather than 9.58 for nothing.
 
 \section{Discussion and Threats to Validity}
 
@@ -718,8 +714,8 @@ changes nothing measurable. That oracle and Proposition~\ref{prop:feas} agree on
 of scored windows. M5 reaches precision 0.900, recall 0.868 and balanced accuracy
 0.906, ahead of M3 at 0.853 and M4 at 0.736, flagging 0.341 of windows against an
 oracle rate of 0.351. M2's perfect recall of 1.000 comes of flagging 0.924 of windows, leaving specificity
-at 0.116. True risk in flagged windows is 0.02206 against 0.009356 in unflagged ones.
-M0 and M1 never update, so their zero is the absence of a mechanism.
+at 0.116, while true risk in flagged windows is 0.02206 against 0.009356 in unflagged
+ones. M0 and M1 never update, so their zero is the absence of a mechanism.
 
 Practitioners treat label lag as a nuisance to be absorbed by a longer window. That is
 wrong: a longer window admits more matured labels and more censored ones together, and
@@ -734,10 +730,12 @@ breaks first. And \eqref{eq:est} estimates an exponentially weighted risk on
 the trimmed overlap population, not the trailing-window risk of
 Section~\ref{sec:prob}, and we measure that gap rather than bound it.
 
-What would break this in production is narrower: the disclosure model is fitted on the
-same censored ledger it corrects, so if a team changes its write-off policy, $p_d$
-moves with no signal in the score distribution and the audit catches it only after a
-reconciliation horizon.
+The learned $p_d$ is not close either, missing the truth by 0.1579 on average on a
+quantity that runs from 0.19 to 0.86, because the model sees amount and score and
+never the fraud topology that actually sets disclosure, and handing it topology would
+repair the number while voiding the experiment. It is fitted on the same censored
+ledger it corrects, so a change of write-off policy moves $p_d$ with no signal in the
+score distribution.
 
 \section{Conclusion}
 
@@ -867,10 +865,6 @@ Mining}, Halifax, NS, Canada, 2017, pp. 275--284.
 \bibitem{synb2b}
 A. Sharma, ``SynB2B-Fraud: A synthetic dataset for fraud detection in B2B payment
 networks,'' Zenodo, 2026, doi: 10.5281/zenodo.21668281.
-
-\bibitem{synb2bpre}
-A. Sharma, ``SynB2B-Fraud: An open synthetic benchmark for fraud detection in B2B
-payment networks,'' Zenodo, 2026, doi: 10.5281/zenodo.21670659.
 
 \end{thebibliography}
 

@@ -522,3 +522,38 @@ of the same grid gave M5 p50 of 18.36, 18.03 and 17.98 microseconds. Everything 
 is identical across runs to the last digit, which the diff against earlier results
 files confirms each time: 448 values move and all 448 are timing. The paper now says
 so where it reports the number.
+
+**D-45. The estimand gap is now a number rather than an acknowledgement.** The paper
+said Eq. (3) targets an exponentially weighted risk on a trimmed overlap population
+rather than the trailing-window risk of Section III, and that the gap was "measured,
+not bounded". Nothing measured it. Per window, on true labels, the boxcar trailing
+risk, the decay-only risk and the decay-plus-trimming risk are now all computed:
+the estimand sits **0.07896** from the trailing target in relative terms, and trimming
+removes **0.1508** of rows carrying **0.1838** of their fraud. Full table in
+`DIAGNOSTICS.md`, regenerable with `make diagnostics`.
+
+**D-46. The support gate is stated in weight, and the weights turn out not to be
+concentrated.** A reviewer objected that 200 units of calibration weight is not 200
+useful observations, which is right in principle. Measured: Kish effective sample size
+under M5 has median 37023 against that gate of 200, fifth percentile 5459, and the
+largest normalised weight averages 0.00006299. So the failure mode the objection
+describes, a handful of enormous inverse-propensity weights clearing the gate while
+carrying almost no information, is not happening here. This is a null result and it
+stays in `DIAGNOSTICS.md` rather than the paper, which has no room for findings that
+change nothing.
+
+**D-47. The learned disclosure propensity is badly wrong, and it is structural.**
+Against simulator truth it misses by **0.1579** on average, on a quantity that ranges
+from 0.19 for payment-term manipulation to 0.86 for wire redirection, with 0.03044 of
+predictions pinned at a clip boundary. The cause is not estimation noise: the
+deployable model sees the standardised amount and the frozen score and never the fraud
+topology, which is what actually sets disclosure. Handing it topology would repair the
+number and void the experiment, since topology is unavailable at decision time in the
+setting the paper claims. This is now stated in Threats rather than left for a reader
+to infer from the oracle gap.
+
+**D-48. Reference [27] was uncited and is gone.** The SynB2B-Fraud preprint appeared
+in the bibliography but no `\cite` referenced it, which a reviewer spotted. Removing
+it fixes an IEEE-style defect, frees four lines, and removes one of the two entries
+naming the author from a double-blind submission. The dataset record is cited and
+stays. A check for uncited keys now runs alongside the other gates.

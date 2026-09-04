@@ -37,6 +37,7 @@ CI_METRICS = [
     "flag_balanced_acc", "risk_when_flagged", "risk_when_not_flagged",
     "exh_flag_precision", "exh_flag_recall", "exh_flag_specificity",
     "exh_flag_balanced_acc", "exh_oracle_infeasible_rate", "oracle_agreement",
+    "gap_overlap_mean", "gap_overlap_rel", "ess_median", "pd_mae_mean",
 ]
 
 
@@ -59,6 +60,8 @@ def _flatten(r: dict) -> dict:
         "flag_delay_covariate", "flag_delay_concept", "flag_delay_prior",
         # assumption-free (exhaustive) oracle + how much A2 matters
         "exh_flag_precision", "exh_flag_recall", "exh_flag_specificity", "exh_flag_balanced_acc", "exh_oracle_infeasible_rate", "exh_flag_n_scored", "exh_flag_tp", "exh_flag_fp", "exh_flag_fn", "exh_flag_tn", "mono_violation_mean", "oracle_agreement",
+        # estimand gap, weight information, propensity error
+        "gap_decay_mean", "gap_decay_p90", "gap_decay_rel", "gap_overlap_mean", "gap_overlap_p90", "gap_overlap_rel", "r_trail_mean", "r_overlap_mean", "ess_mean", "ess_median", "ess_p05", "w_max_norm_mean", "w_top1_share_mean", "trim_share_mean", "trim_fraud_share_mean", "pd_mae_mean", "pd_brier_mean", "pd_clip_share_mean",
     )}
     br = r.get("by_regime", {})
     for k in ("quiet", "covariate", "concept", "prior"):

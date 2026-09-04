@@ -476,6 +476,57 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
             else:
                 e_true = float("nan")
 
+            # ---- diagnostics, timed out of the update ----------------------------
+            # Three things the paper asserts but had not shown: how far the estimand
+            # actually sits from the trailing-window risk it is compared against, how
+            # much information the weights really carry, and how wrong p_d-hat is.
+            _t_diag = time.perf_counter()
+            _sel = scores[idx_all] <= tau_lo
+            if _sel.sum() >= 50:
+                _yv = y[idx_all][_sel].astype(float)
+                _wd = calib.decay_weights(d - days[idx_all][_sel], pol.rho)
+                # (a) boxcar trailing-window truth: the target Section III defines
+                r_trail = float(_yv.mean())
+                # (b) what the decay alone does to it
+                r_decay = float(np.sum(_wd * _yv) / max(np.sum(_wd), 1e-9))
+                # (c) what decay plus propensity trimming does: the actual estimand
+                if uses_iap:
+                    _kp = keep[_sel]
+                    r_ovl = (float(np.sum(_wd[_kp] * _yv[_kp]) / max(np.sum(_wd[_kp]), 1e-9))
+                             if _kp.sum() >= 20 else float("nan"))
+                    _trim_share = float(1.0 - _kp.mean())
+                    _trim_fraud = float(1.0 - (_yv[_kp].sum() / max(_yv.sum(), 1e-9)))
+                else:
+                    r_ovl, _trim_share, _trim_fraud = float("nan"), 0.0, 0.0
+            else:
+                r_trail = r_decay = r_ovl = float("nan")
+                _trim_share = _trim_fraud = float("nan")
+
+            # effective sample size of the weights the support gate actually sees
+            if uses_iap:
+                _wv = wk[wk > 0]
+            else:
+                _wv = w[w > 0] if len(w) else np.array([])
+            if len(_wv):
+                _ess = float(_wv.sum() ** 2 / max(np.sum(_wv ** 2), 1e-12))
+                _wn = _wv / max(_wv.sum(), 1e-12)
+                _wmax = float(_wn.max())
+                _top1 = float(np.sort(_wn)[-max(1, len(_wn) // 100):].sum())
+            else:
+                _ess, _wmax, _top1 = float("nan"), float("nan"), float("nan")
+
+            # how wrong the learned disclosure propensity is, against simulator truth
+            if uses_iap and not oracle_pd:
+                _lm = ch_a == CH_LEDGER
+                _pdm = (float(np.mean(np.abs(pd_hat[_lm] - p_disc_eff[idx_all][_lm])))
+                        if _lm.sum() >= 20 else float("nan"))
+                _pdb = (float(np.mean((pd_hat[_lm] - p_disc_eff[idx_all][_lm]) ** 2))
+                        if _lm.sum() >= 20 else float("nan"))
+                _pdclip = float(np.mean((pd_hat <= 0.0501) | (pd_hat >= 0.9699)))
+            else:
+                _pdm = _pdb = _pdclip = float("nan")
+            t0 += time.perf_counter() - _t_diag
+
             if method == "M2":
                 # cost-optimal tau_lo, band pinned to the remaining review budget
                 fn_cost = cst.fn_rate * amount[idx] + cst.fn_fixed
@@ -522,6 +573,10 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                 "oracle_floor_risk": float(_r_o),
                 "mono_violation": float(_mono_viol),
                 "e_t": float(e_t), "e_true": float(e_true),
+                "r_trail": r_trail, "r_decay": r_decay, "r_overlap": r_ovl,
+                "trim_share": _trim_share, "trim_fraud_share": _trim_fraud,
+                "ess": _ess, "w_max_norm": _wmax, "w_top1_share": _top1,
+                "pd_mae": _pdm, "pd_brier": _pdb, "pd_clip_share": _pdclip,
             })
         infeasible_flags.append(infeasible)
         oracle_flags.append(oracle_infeasible)
@@ -550,6 +605,48 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
 
 
 # ---------------------------------------------------------------------------
+
+
+
+def _diagnostics(comp_series) -> dict:
+    """Aggregate the per-window diagnostics: estimand gap, weight information, p_d error.
+
+    The estimand gap is the point of this. Section III defines the target as a
+    trailing-window risk; the estimator applies geometric decay and drops
+    low-propensity rows, so it targets something else. These numbers say how far
+    apart those actually are on the true labels, rather than leaving it at an
+    acknowledgement in the limitations.
+    """
+    if not comp_series:
+        return {}
+    def col(k):
+        return np.asarray([c.get(k, float("nan")) for c in comp_series], dtype=float)
+    tr, de, ov = col("r_trail"), col("r_decay"), col("r_overlap")
+    out = {}
+    m = np.isfinite(tr) & np.isfinite(de)
+    if m.any():
+        out["gap_decay_mean"] = float(np.mean(np.abs(de[m] - tr[m])))
+        out["gap_decay_p90"] = float(np.quantile(np.abs(de[m] - tr[m]), 0.90))
+        out["gap_decay_rel"] = float(np.mean(np.abs(de[m] - tr[m]) / np.maximum(tr[m], 1e-9)))
+    m = np.isfinite(tr) & np.isfinite(ov)
+    if m.any():
+        out["gap_overlap_mean"] = float(np.mean(np.abs(ov[m] - tr[m])))
+        out["gap_overlap_p90"] = float(np.quantile(np.abs(ov[m] - tr[m]), 0.90))
+        out["gap_overlap_rel"] = float(np.mean(np.abs(ov[m] - tr[m]) / np.maximum(tr[m], 1e-9)))
+        out["r_trail_mean"] = float(np.mean(tr[m]))
+        out["r_overlap_mean"] = float(np.mean(ov[m]))
+    for src, dst in (("ess", "ess"), ("w_max_norm", "w_max_norm"),
+                     ("w_top1_share", "w_top1_share"), ("trim_share", "trim_share"),
+                     ("trim_fraud_share", "trim_fraud_share"), ("pd_mae", "pd_mae"),
+                     ("pd_brier", "pd_brier"), ("pd_clip_share", "pd_clip_share")):
+        v = col(src)
+        v = v[np.isfinite(v)]
+        if len(v):
+            out[f"{dst}_mean"] = float(v.mean())
+            if dst == "ess":
+                out["ess_median"] = float(np.median(v))
+                out["ess_p05"] = float(np.quantile(v, 0.05))
+    return out
 
 
 def _oracle_agreement(a, b) -> float | None:
@@ -815,6 +912,7 @@ def _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
         "mono_violation_mean": (float(np.nanmean(mono_viols))
                                 if mono_viols and not np.all(np.isnan(mono_viols)) else None),
         "oracle_agreement": _oracle_agreement(oracle_flags, oracle_flags_exh),
+        **_diagnostics(comp_series),
         "post_event": post,
         "by_regime": by_regime,
         "estimator_bias": est_bias,

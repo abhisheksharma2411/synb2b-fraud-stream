@@ -6,7 +6,7 @@ then compared at the precision the paper prints. This is stricter than the
 prose gate in `audit_prose.py`, which only asks whether a literal appears
 somewhere in the artefacts and so can be satisfied by coincidence.
 
-**81 claims checked, 0 mismatched.**
+**86 claims checked, 0 mismatched.**
 
 | sec | claim as printed | source | value in results.json | ok |
 |---|---|---|---|---|
@@ -58,8 +58,8 @@ somewhere in the artefacts and so can be satisfied by coincidence.
 | VI | fraud allowed 18,483,140 | `M5.fraud_dollars_allowed` | 18483140.261946253 | yes |
 | VI | fraud total 30,002,619 | `M5.fraud_dollars_total` | 30002618.72606807 | yes |
 | VI | M0 fraud allowed 24,417,614 | `M0.fraud_dollars_allowed` | 24417614.108798314 | yes |
-| VI | p50 17.98 us | `M5.update_us_p50` | 17.98013320658356 | yes |
-| VI | p99 25.65 us | `M5.update_us_p99` | 25.647983440139797 | yes |
+| VI | p50 18.62 us | `M5.update_us_p50` | 18.617833591997623 | yes |
+| VI | p99 26.47 us | `M5.update_us_p99` | 26.465729307441507 | yes |
 | VI | eps=0 ratio 0.871 | `ablation.epsilon[0].bias` | 0.8706843829372388 | yes |
 | VI | eps=0.120 ratio 0.881 | `ablation.epsilon[.12].bias` | 0.8813797695392459 | yes |
 | VI | delay=0 infeasible 1.0000 | `ablation.delay[0].infeasible` | 1.0 | yes |
@@ -75,8 +75,8 @@ somewhere in the artefacts and so can be satisfied by coincidence.
 | VI | ULB M5 ratio 0.944 | `ulb.M5.bias_ratio_warm` | 0.944224254062458 | yes |
 | VI | ULB M4 ratio 0.883 | `ulb.M4.bias_ratio_warm` | 0.883134711797581 | yes |
 | VI | ULB oracle 1.27 | `ulb.M5_oracle.bias_ratio_warm` | 1.2663364476133232 | yes |
-| VI | ULB M5 p50 19.56 us | `ulb.M5.update_us_p50` | 19.558233593124896 | yes |
-| VI | ULB M4 p50 9.39 us | `ulb.M4.update_us_p50` | 9.387932810932398 | yes |
+| VI | ULB M5 p50 20.06 us | `ulb.M5.update_us_p50` | 20.060700009344146 | yes |
+| VI | ULB M4 p50 9.58 us | `ulb.M4.update_us_p50` | 9.58246641093865 | yes |
 | VI | ULB alpha 0.000930 | `stream_alpha.ulb` | 0.00093 | yes |
 | VII | M5 flag precision 0.900 | `M5.flag_precision` | 0.9002142403051494 | yes |
 | VII | M5 flag recall 0.868 | `M5.flag_recall` | 0.868252942286903 | yes |
@@ -91,4 +91,9 @@ somewhere in the artefacts and so can be satisfied by coincidence.
 | VII | A2 violation 0.600 | `M5.mono_violation_mean` | 0.6000262659507365 | yes |
 | VII | oracle agreement 1.000 | `M5.oracle_agreement` | 1.0 | yes |
 | VII | exh balanced acc 0.906 | `M5.exh_flag_balanced_acc` | 0.9061979861792185 | yes |
+| IV-B | estimand rel gap 0.07896 | `M5.gap_overlap_rel` | 0.07896325498571773 | yes |
+| IV-B | trimmed rows 0.1508 | `M5.trim_share_mean` | 0.150801926358978 | yes |
+| IV-B | trimmed fraud 0.1838 | `M5.trim_fraud_share_mean` | 0.18382733775199905 | yes |
+| IV-C | ESS median 37023 | `M5.ess_median` | 37023.22899094328 | yes |
+| VII | p_d MAE 0.1579 | `M5.pd_mae_mean` | 0.1579435810410228 | yes |
 
