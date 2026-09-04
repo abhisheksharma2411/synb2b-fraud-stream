@@ -30,6 +30,10 @@ SUBS = [
 # these must not survive anywhere in the export
 LEAKS = [r"Abhishek", r"Sharma", r"abhicse24", r"abhisheksharma2411", r"0009-0007-1103-2103"]
 TEXT_EXT = {".md", ".tex", ".py", ".txt", ".cff", ".json", ".yml", ".yaml", ".toml", ""}
+# This script is not part of the research artifact, and it cannot anonymise itself: its
+# own identifiers sit inside \b...\b regex escapes, where the word-boundary anchors it
+# would match with cannot fire. Excluding it is simpler and leaves nothing to explain.
+EXCLUDE = {"tools/make_anon_artifact.py"}
 SKIP_NAMES = {"Makefile", "LICENSE", "DATA_LICENSE"}
 
 
@@ -53,6 +57,11 @@ def main() -> int:
     with tarfile.open(tmp) as t:
         t.extractall(stage)
     os.remove(tmp)
+
+    for rel in EXCLUDE:
+        fp = os.path.join(stage, rel)
+        if os.path.exists(fp):
+            os.remove(fp)
 
     n_files = n_edits = 0
     for dirpath, _, names in os.walk(stage):
@@ -83,7 +92,8 @@ def main() -> int:
         "# Anonymous artifact\n\n"
         "Author identifiers, the repository URL and the git history are removed for\n"
         "double-blind review. `paper/main.tex` ships with the toggle set to the\n"
-        "anonymous build.\n\n"
+        "anonymous build. The script that produced this export is omitted; it is\n"
+        "packaging, not part of the method.\n\n"
         "Everything else is the submitted tree. To reproduce:\n\n"
         "    make venv && make test\n"
         "    make reproduce-full     # writes results/results.json\n"
