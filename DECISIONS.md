@@ -81,7 +81,7 @@ brief ("the sign of the supplier-novelty effect") and it preserves that effect's
 meaning rather than its arithmetic.
 
 **D-09. The prior-shift event raises AUC-PR rather than lowering it.** Measured:
-covariate -79.7% relative AUC-PR, concept -69.1%, prior *+40.4%*. Enlarging the
+covariate -79.88% relative AUC-PR, concept -68.05%, prior *+32.33%*. Enlarging the
 positive class makes average precision easier. This is reported as a finding rather
 than smoothed away, and the test suite asserts the sign explicitly
 (`test_injected_drift_degrades_the_scorer_where_it_was_injected`).
@@ -215,7 +215,7 @@ At `alpha = 0.0124`, `b = 0.0200`, `L = 45000`, `delta = 0.05`: `n_exp >= 588` a
 `eps >= 0.653` for `eta = 1` (estimate within one target-width). For `eta = 0.5` the
 requirement is `n_exp >= 2350`, i.e. `eps >= 2.61` — **greater than one, so no
 admissible exploration rate certifies the target at that precision.** The default
-configuration supplies roughly 108 explored transactions per calibration window
+configuration supplies roughly 102 explored transactions per calibration window
 against the 588 the bound asks for.
 
 The empirical rate is reported instead, and it is far kinder than the bound: the
@@ -245,8 +245,9 @@ submission, add it as a normal conference citation.**
 against the Springer DOI.
 
 **D-24. Every arXiv citation was verified against the arXiv API before use.** Titles,
-full author lists and submission dates are in `refcheck/arxiv_verified.json` (not
-committed to the public repo; regenerate with `refcheck_arxiv.py`). Two entries in the
+full author lists and submission dates are in `refcheck/arxiv_verified.json`, which is
+committed and regenerable with `make refcheck`. See D-28: when this entry was first
+written neither the file nor the script existed, and both were rebuilt. Two entries in the
 brief's table needed correcting from the verified metadata: arXiv:2607.27143 is by
 Singh, Srikantha and Lakhanpal, and arXiv:2512.12844 is by Xu, Guo and Wei
 (submitted 14 December 2025, revised 27 April 2026). Nothing that failed verification
@@ -293,3 +294,71 @@ fits the page limit, then excluded by `.gitignore`. The `.tex` is the artefact.
 slice squeezed eighteen months of calendar into four and landed the three drift
 windows on top of each other, which made `make reproduce-small` a smoke test of
 something other than the real configuration.
+
+---
+
+## I. The paper, and what building it turned up
+
+**D-28. Reference verification is now reproducible, because it was not before.**
+D-24 claimed the arXiv metadata lived in `refcheck/arxiv_verified.json`, regenerable
+with `refcheck_arxiv.py`. Neither existed anywhere in the tree or in any commit, so the
+claim rested on nothing a reader could check. `tools/refcheck_arxiv.py` now verifies
+all 26 bibliography entries against the arXiv Atom API, the Crossref REST API and the
+Zenodo REST API, comparing normalised titles and first-author surnames, and writes
+`refcheck/arxiv_verified.json`. Every entry returned OK. Two corrections that D-24
+recorded were confirmed against live metadata: arXiv:2607.27143 is Singh, Srikantha
+and Lakhanpal, and arXiv:2512.12844 is Xu, Guo and Wei. One title in the brief was
+wrong and is cited from the API instead: arXiv:2606.14909 is *"Audited Conformal
+Prediction **for Classification** under Unknown Distribution Shift"*. Vovk et al. is
+the one entry with no machine-readable record and is marked `MANUAL`.
+
+**D-29. The anonymous-build leak check tested the wrong thing.** It scanned the raw
+source for the author name, the repository URL and an acknowledgements heading. A
+single file carrying both variants behind `\ifanon` always contains all three, so that
+check could never pass by construction. It now resolves the conditional first and
+scans what the anonymous build actually renders, extracted from the PDF with
+`pdftotext`. The anonymous PDF contains no author, no affiliation, no URL and no
+acknowledgement; "A. Sharma" survives only in the two bibliography entries for the
+cited dataset, which is ordinary third-person citation and is what a double-blind
+submission is supposed to look like.
+
+**D-30. Two latent bugs in the paper tooling surfaced the moment a real `.tex`
+existed.** Both `build_paper.py` and `audit_prose.py` flipped the toggle with
+`re.sub(..., "\\anonfalse", ...)`, and a replacement string beginning `\a` is read by
+`re` as the BEL escape, so the toggle line became `^^Gnonfalse` and neither build was
+ever anonymous. Both now pass a function as the replacement. Separately, the page count
+came from a `/Type /Page` regex over the raw PDF bytes, which returns zero when pdfTeX
+puts the page tree in a compressed object stream; both tools now prefer `pdfinfo` and
+keep the regex as a fallback.
+
+**D-31. The file's own header comment cannot name the toggle.** `build_paper.py`
+replaces the first match of `\anon(true|false)`, and the original header said "flip
+this to `\anontrue`", so the substitution rewrote the comment and left the real toggle
+alone. The comment now spells the values without a backslash.
+
+**D-32. Section 6.6's cut list was not used, and Fig. 2 stayed.** The named build came
+in at 7 pages with 19 words of bibliography on the last page. Two lossless edits fixed
+it: merging two sentences, and deleting a repository URL that was printed twice, once
+in the acknowledgement and once under the toggle in Section V. The cut order exists to
+protect the propositions, the negative result and the citations when content has to go;
+no content had to go here, so removing a figure to recover 19 words would have cost
+more than it saved. If a future revision overruns again, Fig. 2 is still first out.
+
+**D-33. Two loose fractions in the draft were replaced with measured values.** "A tenth
+of the base rate" described a ratio that is nearer a twelfth (0.002230 against
+0.028413) and is now stated qualitatively; "a fifth of the analyst budget" described
+`eps = 0.120` and now states the figure. Both were caught by reading the prose against
+`results.json` by hand, not by a gate, since the numeric gate only checks that a
+literal appears in the artefacts and cannot judge an English fraction.
+
+**D-34. Two small LaTeX choices.** `\title` and `\author` sit in the preamble so the
+prose audit never sees the author block, and `proof` is defined locally in three lines
+rather than by loading `amsthm`, which fights IEEEtran's own theorem handling.
+
+**D-35. Stale numbers in this file were corrected against the final grid.** D-09 and
+D-21 were written before the last full run and carried its predecessors: the
+degradation figures are -79.88%, -68.05% and +32.33%, and the default configuration
+supplies about 102 explored rows per calibration window, not 108. The README carried
+the same two stale degradation figures and the estimator overstatement as "about 19x";
+both were corrected. Every number in the paper was then checked one at a time against
+`results/results.json`: 57 headline claims, 0 mismatches.

@@ -104,7 +104,10 @@ def main(small=False):
     A(f"- Python {p['python']} on {p['platform']} ({p['machine']})")
     A(f"- CPU: {p['cpu']}, {p['n_cpu']} logical cores")
     A("- packages: " + ", ".join(f"{k} {v}" for k, v in sorted(p["packages"].items()) if v))
-    A(f"- git commit: {p['git_commit']}" + ("  (working tree dirty)" if p["git_dirty"] else ""))
+    A(f"- git commit at the time of the run: {p['git_commit']}"
+      + ("  (working tree dirty)" if p["git_dirty"] else ""))
+    A("  This is the commit the grid executed at, not the commit that carries this file;"
+      " later commits added the paper and did not recompute any number here.")
     A(f"- total wall clock: {R['wall_clock_s']:.1f} s")
     A(f"- generated: {p['utc']}")
     A(f"- bootstrap: {C.BOOTSTRAP_RESAMPLES:,} resamples, percentile method")

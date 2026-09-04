@@ -159,7 +159,8 @@ Seeds: [11, 23, 37, 53, 71].  Reduced-size pass: False.
 - Python 3.14.7 on macOS-26.5.1-arm64-arm-64bit-Mach-O (arm64)
 - CPU: Apple M4 Pro, 12 logical cores
 - packages: lightgbm 4.7.0, numpy 2.5.2, pandas 3.0.5, pyarrow 25.0.1, scikit-learn 1.9.0, scipy 1.18.1
-- git commit: 04d18c5950de6be5e0e7046e4e0f1499d06b0b9e  (working tree dirty)
+- git commit at the time of the run: 04d18c5950de6be5e0e7046e4e0f1499d06b0b9e  (working tree dirty)
+  This is the commit the grid executed at, not the commit that carries this file; later commits added the paper and did not recompute any number here.
 - total wall clock: 1134.4 s
 - generated: 2026-09-04T01:52:33Z
 - bootstrap: 10,000 resamples, percentile method

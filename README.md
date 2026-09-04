@@ -33,7 +33,7 @@ Two consequences, and they pull in opposite directions:
   sixty days. So the *arrived* pool over any recent window is made almost entirely of
   bad news, and a naive estimator reads the auto-allow path as far more fraudulent
   than it is. Measured on SynB2B-Fraud, in steady state, not as a cold start: the
-  uncorrected estimator overstates by about 19x.
+  uncorrected estimator overstates by a factor of 19.3 (M4 bias ratio 0.0518).
 - The frauds that never surface are recorded as good. That censoring pushes the other
   way, and it does not average out.
 
@@ -73,7 +73,7 @@ age is not stationary in this benchmark — see `DECISIONS.md` D-08). `a0`,
 [`src/t13/drift_params.json`](src/t13/drift_params.json).
 
 Measured effect on the frozen scorer's AUC-PR over the ten days after each event:
-covariate **-79.7%**, concept **-69.1%**, prior **+40.4%**. The prior event *raises*
+covariate **-79.88%**, concept **-68.05%**, prior **+32.33%**. The prior event *raises*
 AUC-PR, because a larger positive class makes average precision easier. That is
 reported, and asserted in the test suite, rather than tidied away.
 
