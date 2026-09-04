@@ -208,15 +208,21 @@ that, not the stronger thing.
 point, and the paper says so.** Bernstein on the exploration sample, with `R ≈ alpha`,
 gives `|R_hat - R| <= eta * alpha` with probability `1 - delta` once
 
-    n_exp  >=  2 (1 - alpha) log(2/delta) / (eta^2 alpha),
-    and since n_exp ≈ eps * b * L,   eps >= 2 (1-alpha) log(2/delta) / (eta^2 alpha b L).
+    n_exp  >=  2 [(1 - alpha) + eta/3] log(2/delta) / (eta^2 alpha),
+    and since n_exp ≈ eps * b * L,
+    eps >= 2 [(1-alpha) + eta/3] log(2/delta) / (eta^2 alpha b L).
 
-At `alpha = 0.0124`, `b = 0.0200`, `L = 45000`, `delta = 0.05`: `n_exp >= 588` and
-`eps >= 0.653` for `eta = 1` (estimate within one target-width). For `eta = 0.5` the
-requirement is `n_exp >= 2350`, i.e. `eps >= 2.61` — **greater than one, so no
-admissible exploration rate certifies the target at that precision.** The default
-configuration supplies roughly 102 explored transactions per calibration window
-against the 588 the bound asks for.
+At `alpha = 0.0124`, `b = 0.0200`, `L = 45000`, `delta = 0.05`: `n_exp >= 786` and
+`eps >= 0.873` for `eta = 1` (estimate within one target-width). For `eta = 0.5` the
+requirement is `n_exp >= 2748`, i.e. `eps >= 3.05` — **three times the whole budget, so
+no admissible exploration rate certifies the target at that precision.** The default
+configuration is designed to supply `eps*b*L = 108` explored rows per calibration
+window and measures 102, against the 786 the bound asks for.
+
+An earlier draft of this entry dropped Bernstein's range term and carried the
+variance term alone, `2(1-alpha)log(2/delta)/(eta^2 alpha)`, giving 588 and 2350. That
+understates the requirement. The corrected figures are larger, so the conclusion that
+the bound is vacuous is strengthened, not weakened, by the fix. See D-36.
 
 The empirical rate is reported instead, and it is far kinder than the bound: the
 estimator's bias ratio improves monotonically from 0.871 at `eps = 0` toward 1 as
@@ -362,7 +368,38 @@ rather than by loading `amsthm`, which fights IEEEtran's own theorem handling.
 **D-35. Stale numbers in this file were corrected against the final grid.** D-09 and
 D-21 were written before the last full run and carried its predecessors: the
 degradation figures are -79.88%, -68.05% and +32.33%, and the default configuration
-supplies about 102 explored rows per calibration window, not 108. The README carried
+supplies about 102 explored rows per calibration window. That last one was not
+staleness and was mislabelled as such here: `108` is the nominal `eps*b*L`, and `102`
+is what the run actually delivered. Both are now stated. The README carried
 the same two stale degradation figures and the estimator overstatement as "about 19x";
 both were corrected. Every number in the paper was then checked one at a time against
 `results/results.json`: 57 headline claims, 0 mismatches.
+
+**D-36. An adversarial review of the finished paper found four defects, all fixed.**
+The review was run against the compiled paper, not the draft, and every claim was
+re-derived rather than re-read.
+
+1. *Proposition 2 stated its admissible set backwards.* The condition read
+   `0 < c(x) <= 1/p_d(x)`, which permits `c < p_d` and therefore `p_d/c > 1`, not a
+   probability. With `p_d = 0.5, r = 0.02` the stated set admits `c = 0.1`, whose
+   alternative disclosure probability is 5. The correct interval is
+   `p_d(x) <= c(x) <= 1/r(x)`. The non-identification result itself is unaffected: the
+   interval is non-degenerate whenever `r p_d < 1`.
+2. *The rate bound was not the inequality it was attributed to.* See the revision
+   above: Bernstein's range term was missing.
+3. *Section V referenced itself.* "Arrival follows Section V's channels", inside
+   Section V. The channels are defined in Section IV; the label was added and the
+   reference repointed.
+4. *"Perfect feedback" was the wrong description of the delay ablation.* Setting the
+   delay multiplier to 0 removes the lag and leaves the censoring untouched, and the
+   distinction between those two is the paper's own thesis. The sentence now says
+   which one was removed.
+
+Two smaller changes came out of the same pass. The oracle-propensity bracketing claim
+holds on SynB2B but not on ULB, where the oracle overshoots to 1.27, further from
+unbiased than the uncorrected M4 at 0.883; the ULB paragraph now says so. And four
+paragraphs opened with a bare numeral ("Four things follow", "Three channels",
+"Three assumptions", "Three limits"), which had become a visible template; two were
+rewritten.
+
+All thirteen prose gates still pass and both builds are still 6 pages.

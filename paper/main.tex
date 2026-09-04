@@ -277,6 +277,7 @@ through the policy's own decisions, and the filter is tightest exactly where the
 guarantee needs data.
 
 \section{Method}
+\label{sec:method}
 
 \subsection{Arrival model}
 
@@ -375,7 +376,7 @@ be making.
 
 Let $F$ be the score law, $r(u) = \Pr(y=1 \mid s = u)$ the conditional fraud rate and
 $R(\tau) = \mathbb{E}[y \mid s \le \tau]$ the risk on everything released below
-$\tau$. Three assumptions carry the argument. (A1) $F$ is continuous and strictly
+$\tau$. The argument needs three assumptions, and one is doing real work. (A1) $F$ is continuous and strictly
 increasing on the operating range. (A2) $r$ is non-decreasing in the score. (A3) the
 analyst queue is standing capacity and is always spent, so the band carries
 $b(1-\varepsilon)$.
@@ -409,8 +410,9 @@ is worth, which is what the next proposition is about.
 On the release path only $Z = Y \cdot D$ is observed, with
 $D \sim \mathrm{Bern}(p_d(x))$ independent of $Y$ given $x$. Then
 $\Pr(Z = 1 \mid x) = r(x)\,p_d(x)$, so for any $c(x)$ with
-$0 < c(x) \le 1/p_d(x)$ and $c(x) r(x) \le 1$ the pair $(cr,\; p_d/c)$ induces the
-same observable law. Only the product is identified from the ledger channel.
+$p_d(x) \le c(x) \le 1/r(x)$ the pair $(cr,\; p_d/c)$ is again a rate-probability
+pair and induces the same observable law. Only the product is identified from the
+ledger channel.
 \end{proposition}
 
 The review band identifies $r$ on $(\tau_{\mathrm{lo}}, \tau_{\mathrm{hi}}]$, which is
@@ -425,16 +427,18 @@ release region can test.
 We then asked how much exploration a rate guarantee needs. Bernstein's inequality on
 the exploration sample, with $R \approx \alpha$, gives
 $|\hat{R} - R| \le \eta\alpha$ with probability $1-\delta$ once
-$n_{\exp} \ge 2(1-\alpha)\log(2/\delta) / (\eta^2 \alpha)$, and since
+$n_{\exp} \ge 2\left[(1-\alpha) + \eta/3\right]\log(2/\delta) / (\eta^2 \alpha)$,
+and since
 $n_{\exp} \approx \varepsilon b L$ over a window of length $L$,
 \begin{equation}
 \label{eq:eps}
-\varepsilon \;\ge\; \frac{2(1-\alpha)\log(2/\delta)}{\eta^{2}\,\alpha\,b\,L}.
+\varepsilon \;\ge\; \frac{2\left[(1-\alpha) + \eta/3\right]\log(2/\delta)}
+{\eta^{2}\,\alpha\,b\,L}.
 \end{equation}
 At the operating point of Section~\ref{sec:setup} this asks for
-$n_{\exp} \ge 588$, that is $\varepsilon \ge 0.653$, merely to pin the estimate within
-one target-width. Halve the tolerance and it demands 2350 explored items, an
-$\varepsilon$ of 2.61, which is more than the whole budget. The bound is vacuous here.
+$n_{\exp} \ge 786$, that is $\varepsilon \ge 0.873$, merely to pin the estimate within
+one target-width. Halve the tolerance and it demands 2748 explored items, an
+$\varepsilon$ of 3.05, three times the whole budget. The bound is vacuous here.
 We report the measured rate in its place and say so again in the results.
 
 \begin{figure}[t]
@@ -518,7 +522,7 @@ second fraud channel layered on the generator's own labels, never as a relabelli
 all 1,500 published labels survive: a covariate shift in the log-amount law, a 60-day
 sign flip of the supplier-novelty coefficient, and a base-rate surge with a 9-day
 half-life. Magnitudes are solved against stated targets rather than picked by eye.
-Arrival follows Section~\ref{sec:setup}'s channels with disclosure probabilities
+Arrival follows Section~\ref{sec:method}'s channels with disclosure probabilities
 running from 0.86 for wire redirection down to 0.19 for payment-term manipulation,
 because a redirected wire generates a phone call and a manipulated payment term
 generates nothing.
@@ -679,8 +683,10 @@ match a measurement, and the gap is stated rather than closed.
 One ablation came out backwards, and it is the most useful thing in the study. Set the
 delay multiplier to 0 so every label arrives the instant the decision is taken, and the
 infeasibility flag fires in 1.0000 of windows, against 0.341 at the true delay, while
-realised risk improves to 0.019487. Perfect feedback made the policy louder, not
-calmer. The lag was never protecting anything; it was concealing the fact that the
+realised risk improves to 0.019487. That is not perfect feedback, because the
+undisclosed frauds are still booked clean at the ledger close; it is the delay alone,
+removed. And removing it made the policy louder, not calmer. The lag was never
+protecting anything, it was concealing the fact that the
 target could not be met at this capacity, and the delayed estimator was quiet because
 it was wrong. Raising disclosure has a related effect. At a multiplier of 2.4, so that
 released frauds surface far more often, the corrected estimator's bias ratio degrades
@@ -714,7 +720,9 @@ Method & FOR & quiet & rev. & hold & Infeas. & cost/1k & Bias\\
 The card portfolio in Table~\ref{tab:ulb} reproduces the shape on a much rarer
 positive class, and it also shows a limit. M5 holds quiet-regime risk at 0.000300 against a
 target of 0.000930 and reaches a bias ratio of 0.944, but M4 without any correction
-already sits at 0.883. Disclosure there depends on amount alone, since the portfolio
+already sits at 0.883. The oracle variant overshoots to 1.27 here, further from
+unbiased than either, so the bracketing that held on the invoice stream does not
+survive a nearly flat propensity. Disclosure there depends on amount alone, since the portfolio
 carries no topology annotation, so the propensity is nearly flat and there is little
 for the correction to undo. The method earns its keep where the disclosure law varies
 across the population. Where it does not vary, it costs microseconds and buys almost
@@ -733,7 +741,7 @@ window. That reading is wrong. A longer window admits more matured labels and mo
 censored ones in the same motion, and the censored ones are not noise, they carry a
 sign.
 
-Three limits deserve to be stated plainly rather than softened. The drift in this
+The limits below deserve to be stated plainly rather than softened. The drift in this
 study was injected by us, with magnitudes we solved against targets we chose, so every
 recovery-time number here describes our generator and not any real payment network,
 and bootstrap intervals do nothing about that. The cost constants are stipulated,

@@ -23,19 +23,19 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 
 ## 1. Sentence-length distribution
 
-- sentences: 185
-- mean length: 20.67 words
-- standard deviation: 11.25 words  (gate: >= 11)
+- sentences: 187
+- mean length: 20.78 words
+- standard deviation: 11.16 words  (gate: >= 11)
 - min 2, max 53
 
 | words | count |
 |---|---|
 | 0-4 | 9 |
-| 5-9 | 24 |
-| 10-14 | 32 |
+| 5-9 | 23 |
+| 10-14 | 33 |
 | 15-19 | 27 |
-| 20-24 | 30 |
-| 25-29 | 22 |
+| 20-24 | 31 |
+| 25-29 | 23 |
 | 30-34 | 18 |
 | 35-39 | 14 |
 | 40-44 | 4 |
@@ -44,7 +44,7 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 
 ## 2. Short and long sentences
 
-- under 8 words: 20 (gate: >= 12)
+- under 8 words: 19 (gate: >= 12)
 - over 35 words: 22 (gate: >= 8)
 
   - short: "abstract Fraud scores are not decisions."
@@ -61,7 +61,7 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 ## 3. Paragraph rhythm
 
 - paragraphs: 44
-- sentence counts in order: [10, 4, 2, 6, 3, 5, 4, 6, 3, 4, 4, 3, 5, 6, 6, 1, 3, 5, 4, 5, 2, 4, 2, 3, 4, 2, 4, 3, 4, 4, 7, 5, 5, 6, 5, 6, 6, 5, 4, 3, 4, 3, 4, 1]
+- sentence counts in order: [10, 4, 2, 6, 3, 5, 4, 6, 3, 4, 4, 3, 5, 6, 6, 1, 3, 5, 4, 5, 2, 4, 2, 3, 4, 2, 4, 3, 4, 4, 7, 5, 5, 6, 5, 7, 6, 6, 4, 3, 4, 3, 4, 1]
 - runs of three consecutive equal counts: none
 
 ## 4. Banned vocabulary
@@ -76,13 +76,13 @@ None found. Zero occurrences of every banned word and phrase.
 
 ## 6. Conjunction openers
 
-- sentences opening with But/So/Yet/And/Then: 7 (gate: >= 6)
+- sentences opening with But/So/Yet/And/Then: 8 (gate: >= 6)
 
 ## 7. Numeric traceability
 
 Every numeric literal in the prose matches a value in `results/results.json`,
 `results/drift_events.json`, `src/t13/drift_params.json`, or the structural
-allowlist in `tools/prose_numbers_allowlist.json` (63 entries,
+allowlist in `tools/prose_numbers_allowlist.json` (64 entries,
 each carrying its justification).
 
 ## 8. Enumeration ladders

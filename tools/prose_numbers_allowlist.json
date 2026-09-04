@@ -25,10 +25,6 @@
   "10,000": "BOOTSTRAP_RESAMPLES, src/t13/config.py",
   "95": "bootstrap interval level, percent",
   "20": "TRAIN_FRACTION expressed as a percentage, src/t13/config.py",
-  "588": "Proposition 2(b) sample-size requirement at eta = 1, delta = 0.05, alpha = 0.0124",
-  "2350": "Proposition 2(b) sample-size requirement at eta = 0.5, same delta and alpha",
-  "0.653": "Proposition 2(b) exploration-rate bound at eta = 1, from 588/(b L)",
-  "2.61": "Proposition 2(b) exploration-rate bound at eta = 0.5; exceeds one, hence vacuous",
   "497": "explored rows inside one calibration window at eps = 0.60, from the measured 884.6 over the evaluation stream scaled by L/n_eval",
   "2002": "publication year of Papadopoulos et al., cited in Related Work",
   "1": "cardinal, and eta = 1 in Proposition 2(b)",
@@ -61,5 +57,10 @@
   "9.25": "unused",
   "0.05": "delta, the failure probability in Proposition 2(b)",
   "0.5": "eta = 0.5, the tighter precision setting in Proposition 2(b)",
-  "2.5": "unused"
+  "2.5": "unused",
+  "786": "Proposition 2(b) sample-size requirement at eta = 1, delta = 0.05, alpha = 0.0124, full Bernstein including the range term",
+  "0.873": "Proposition 2(b) exploration-rate bound at eta = 1, from 786/(b L)",
+  "2748": "Proposition 2(b) sample-size requirement at eta = 0.5, same delta and alpha",
+  "3.05": "Proposition 2(b) exploration-rate bound at eta = 0.5; exceeds one three times over, hence vacuous",
+  "1.27": "ULB M5_oracle bias ratio 1.2663, results.json methods.ulb.M5_oracle.bias_ratio_warm"
 }
