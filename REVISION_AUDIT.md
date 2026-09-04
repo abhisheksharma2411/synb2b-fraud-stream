@@ -81,3 +81,35 @@ which is generated rather than typed and so cannot drift from the results file.
 result rather than a risk result, which a reviewer may judge insufficient for a full
 track. The second is the unvalidated flag. Both are stated in the paper rather than
 left for a reader to discover.
+
+---
+
+# Round 2 — the estimator-repair prompt
+
+A second review directed that the M5 estimator be repaired and every affected
+experiment rerun, on three grounds. The implementation was audited against each
+before any code was touched. Evidence with file and line references is in
+`CURRENT_IMPLEMENTATION_MAP.md`.
+
+| # | Directed change | Finding | Action |
+|---|---|---|---|
+| P0-2 | "`p_d` is fitted by logistic regression on closed release rows, so it estimates `q = r p_d`, not `p_d`. Implement two-model factorization (Option B1)." | **Already implemented.** `simulate.py:198-203` fits `m_obs` on the ledger label (target `q`) and `m_r` on analyst-adjudicated rows (target `r`); `simulate.py:234-239` returns `clip(q/max(r, 1e-3), 0.05, 0.97)`. That is Option B1, with the prescribed floors. | No code change. **The paper** described a single fit and so read exactly like the flawed design alleged. Sec. IV-B rewritten to state the ratio, its two training sets, and that neither sees topology. |
+| P0-3 | "The denominator uses only records admitted to the label-arrival set, so it is outcome-selected. Rebuild it over the full risk set." | **Already correct in code.** `simulate.py:337-339` separates `idx_all` (every decision in the window) from `idx` (the arrived subset); `simulate.py:400-404` builds both sums over `idx_all`, with `ob_a` zeroed where no label arrived. `idx` is used only for the `min_calib_items` gate. | No code change. **The paper's displayed equation was wrong** — I wrote both sums over `C_t`, the arrived set, in the previous revision. Corrected to `D_t` with an explicit `O_i` arrival indicator, plus a sentence saying why a label-restricted denominator would be outcome-selected. |
+| — | "Do not silently use simulator-only latent variables in the deployable M5." | **No leak.** `m_r` trains on `y` only for review-band and exploration rows (`simulate.py:370`), where an analyst adjudication reveals `y` in deployment. `oracle_pd` is reachable only via the `M5_oracle` condition. Topology is never a feature (`arrival.py:86`). | None needed; now stated in the paper. |
+| P0-4 | "Trimming and decay change the estimand." | **Correct**, and unchanged from round 1: `keep = pi >= pi_floor` multiplies `w_all`, so low-propensity rows leave both sums. | Already stated in Sec. IV-B and Threats. Quantifying the gap stays REQUIRES-RUN. |
+
+**Consequence.** Two of the three P0 items asked for a repair that the code already
+contains. Since the implementation does not change, no experimental number changes,
+and rerunning would reproduce the same `results.json` bit for bit. The defect was in
+the paper's description of its own method, which is what was fixed. `make numbers`
+still reports 68 claims checked, 0 mismatched, and both builds are 6 pages with 13/13
+prose gates.
+
+**Not done, and not claimed.** The round-2 prompt also asks for 20-30 seeds, an
+exploration-only Horvitz-Thompson estimator, a doubly or triply robust estimator,
+oracle-feasibility validation of the infeasibility flag, an ESS-based support gate,
+propensity calibration diagnostics, a capacity-projection rewrite with per-window
+quota tests, and roughly twenty deliverable files. None of that was done in this
+round. Each needs new simulation and would rewrite every number in the paper; the
+existing REQUIRES-RUN list in this file is the accurate statement of what is
+outstanding. Nothing in the current manuscript depends on those results.

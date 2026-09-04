@@ -449,3 +449,24 @@ in `results.json`, which a wrong digit can satisfy by coincidence.
 `tools/check_numbers.py` re-derives all 68 printed numbers from the specific field
 each comes from and writes `NUMERICAL_CHECKS.md`. Current run: 68 checked, 0
 mismatched. Run it with `make numbers`.
+
+**D-40. A second review asked for an estimator repair the code already contained.**
+It directed that `p_d` be rebuilt as a two-model ratio and that the risk-estimator
+denominator be widened beyond the arrived-label set, then that every experiment be
+rerun. `simulate.py:198-239` already computes `p_d` as `clip(q/max(r, 1e-3))` from two
+fits, and `simulate.py:337-404` already builds both sums over every decision in the
+window rather than over arrivals. Full evidence is in
+`CURRENT_IMPLEMENTATION_MAP.md`.
+
+What was actually wrong was the paper. Section IV-B described `p_d` as a single
+logistic fit, and the estimator equation I added in the previous revision put both
+sums over the arrived set. Both now match the implementation, and the equation carries
+an explicit arrival indicator plus a sentence on why a label-restricted denominator
+would be outcome-selected.
+
+No experiment was rerun, because nothing in the code changed and a rerun would
+reproduce `results.json` exactly. The lesson is narrower than the review's: a wrong
+description of a correct method is still a defect, and it invites exactly the
+objection it received. It also means an external reviewer reading only the PDF had no
+way to tell the two apart, which is the argument for putting the estimator in the
+paper rather than in the artefact.

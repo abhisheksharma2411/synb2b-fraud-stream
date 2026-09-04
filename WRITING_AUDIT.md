@@ -23,29 +23,29 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 
 ## 1. Sentence-length distribution
 
-- sentences: 199
-- mean length: 19.79 words
-- standard deviation: 11.14 words  (gate: >= 11)
+- sentences: 201
+- mean length: 19.88 words
+- standard deviation: 11.06 words  (gate: >= 11)
 - min 3, max 58
 
 | words | count |
 |---|---|
-| 0-4 | 8 |
+| 0-4 | 7 |
 | 5-9 | 30 |
 | 10-14 | 38 |
-| 15-19 | 27 |
-| 20-24 | 36 |
+| 15-19 | 28 |
+| 20-24 | 39 |
 | 25-29 | 23 |
-| 30-34 | 18 |
-| 35-39 | 10 |
+| 30-34 | 17 |
+| 35-39 | 9 |
 | 40-44 | 2 |
-| 45-49 | 4 |
+| 45-49 | 5 |
 | 50-54 | 1 |
 | 55-59 | 2 |
 
 ## 2. Short and long sentences
 
-- under 8 words: 28 (gate: >= 12)
+- under 8 words: 27 (gate: >= 12)
 - over 35 words: 17 (gate: >= 8)
 
   - short: "abstract Fraud scores are not decisions."
@@ -62,7 +62,7 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 ## 3. Paragraph rhythm
 
 - paragraphs: 46
-- sentence counts in order: [12, 4, 4, 6, 3, 5, 5, 4, 5, 4, 4, 3, 6, 5, 6, 5, 5, 1, 2, 4, 3, 5, 1, 4, 4, 3, 3, 2, 3, 2, 4, 4, 9, 4, 8, 6, 6, 7, 3, 5, 4, 3, 5, 1, 6, 1]
+- sentence counts in order: [12, 4, 4, 6, 3, 5, 5, 4, 5, 4, 4, 3, 6, 5, 6, 7, 5, 1, 2, 4, 3, 5, 1, 4, 4, 3, 3, 2, 3, 2, 4, 4, 9, 4, 8, 6, 6, 7, 3, 5, 4, 3, 5, 1, 6, 1]
 - runs of three consecutive equal counts: none
 
 ## 4. Banned vocabulary

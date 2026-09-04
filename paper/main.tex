@@ -309,25 +309,29 @@ Let $\pi_i$ be the probability that $i$ has produced an informative label by now
 the review path it is known by construction, since the policy chose the review and the
 SLA is an operational fact. On the release path $\pi_i = p_d(x_i)F_G(t - t_i)$ with
 $F_G$ the disclosure delay law, and $p_d$ must be estimated, which is where the
-modelling risk sits. On that path $p_d$ is not known and is fitted online by ridge logistic regression on
-the standardised invoice amount and the frozen score, using only rows whose 180-day
-window has already closed, so the correction is itself lagged. The estimate on a score
-grid is
+modelling risk sits. On that path the ledger shows only the product $r(x)p_d(x)$, so $p_d$ is recovered as
+a ratio: $\hat{q}$ fitted on matured release rows, whose label is $\widetilde{Y}$,
+over $\hat{r}$ fitted on the rows an analyst adjudicated, which is the review band
+plus the exploration draw. Both are ridge logistic fits on the standardised amount and
+the frozen score. Neither sees the fraud topology that actually drives disclosure, so
+$\hat{p}_d$ is a marginal approximation, and the fit needs closed windows, which makes
+the correction itself lagged. The estimate on a score grid is
 \begin{equation}
 \label{eq:est}
 \widehat{R}_t(\tau) =
-\frac{\sum_{i \in \mathcal{C}_t} w_i\,\widetilde{Y}_i\,\pi_i^{-1}\,
+\frac{\sum_{i \in \mathcal{D}_t} w_i\,O_i\,\widetilde{Y}_i\,\pi_i^{-1}\,
       \mathbf{1}\{s_i \le \tau\}}
-     {\sum_{i \in \mathcal{C}_t} w_i\,\mathbf{1}\{s_i \le \tau\}},
+     {\sum_{i \in \mathcal{D}_t} w_i\,\mathbf{1}\{s_i \le \tau\}},
 \end{equation}
-with $w_i = \rho^{\,t-t_i}\mathbf{1}\{\pi_i \ge \pi_0\}$ over a window capped in both
-days and count.
+where $\mathcal{D}_t$ is every decision taken in the window, held items aside, $O_i =
+\mathbf{1}\{A_i \le t\}$, and $w_i = \rho^{\,t-t_i}\mathbf{1}\{\pi_i \ge \pi_0\}$. The
+denominator counts decisions, not labels. Restricting it to arrived labels would be
+outcome-selected, because a surfaced fraud arrives months before the close that books
+an undisclosed one clean.
 The propensity enters the numerator alone, inflating each surfaced fraud to stand for
-those still inside the reconciliation window. Two consequences follow. Trimming at
-$\pi_0$ drops items from numerator and denominator alike, so \eqref{eq:est} targets
-the overlap population $\{\pi_i \ge \pi_0\}$, and the decay makes it exponentially
-weighted rather than the trailing-window mean of Section~\ref{sec:prob}. Both gaps are
-measured, not bounded.
+those still inside the reconciliation window. Trimming at $\pi_0$ drops items from both sums, so \eqref{eq:est} targets the overlap
+population $\{\pi_i \ge \pi_0\}$, and the decay makes it exponentially weighted rather
+than the trailing-window mean of Section~\ref{sec:prob}.
 
 \begin{figure}[t]
 \centering
@@ -388,11 +392,10 @@ miss the target and report success.
 
 A fraction $\varepsilon$ of review capacity is spent on transactions drawn uniformly
 at random from below $\tau_{\mathrm{lo}}$, independent of score, which leaves
-$R(\tau_{\mathrm{lo}})$ intact as the released region's risk. These are items the
-policy is already confident about, so the spend looks like waste on any dashboard an
-operations manager reads, and that is why it gets cut first in production. Their
-labels are the only ones drawn from the release region at a known probability, so they
-alone can test the extrapolation the estimator would otherwise make.
+$R(\tau_{\mathrm{lo}})$ intact as the released region's risk. These are items the policy is already confident about, so the spend looks like waste
+on any dashboard an operations manager reads, and that is why it gets cut first in
+production. Their labels are the only ones drawn from the release region at a known
+probability, so they alone anchor $\hat{r}$ there.
 
 \subsection{When are the target and the budget compatible?}
 
@@ -471,10 +474,10 @@ instead.
 
 \subsection{Audit protocol}
 
-Every window emits four numbers: the reweighted estimate, the realised risk over
-matured labels, review demand against $b$, and the flag. A policy whose estimate is
-flat while its realised risk climbs is not stable, it is blind, and no detector
-watching only the score distribution will say so.
+Every window emits four numbers: the reweighted estimate, realised risk over matured
+labels, review demand against $b$, and the flag. A policy whose estimate is flat while
+its realised risk climbs is blind, and no detector watching only the score
+distribution will say so.
 
 \begin{algorithm}[t]
 \caption{Budgeted conformal decisioning with exploration}
