@@ -255,33 +255,25 @@ was cited.
 
 ---
 
-## G. BLOCKED
+## G. BLOCKED (B-01 since resolved)
 
-**B-01. The public GitHub repository could not be created or pushed.** Still open,
-re-checked after the paper was finished.
+**B-01. RESOLVED. The public repository exists and carries the full history.**
 
-`gh auth status` reports *"You are not logged into any GitHub hosts."* There is no
-`~/.config/gh`, and neither `GH_TOKEN` nor `GITHUB_TOKEN` is set, so `gh repo create`
-exits asking for `gh auth login`, whose device flow cannot complete in a
-non-interactive session. The macOS keychain does hold a `github.com` credential under
-the username `x-access-token`, which is the form GitHub App installation tokens take:
-short-lived and scoped to repositories the app is already installed on, so it cannot
-create a new one. `git push` was attempted and returns *"Repository not found"*,
-because a push cannot bring a repository into existence.
+<https://github.com/abhisheksharma2411/synb2b-fraud-stream>, public, default branch
+`main`, all 15 commits, local and remote `HEAD` identical at `bebe8fa`.
 
-The remote is configured and the history is intact, so publishing is one command once
-the repository exists. Either of these finishes it:
+It stayed blocked through the build because `gh` had no session, no `~/.config/gh` and
+no `GH_TOKEN`, and the device flow needs an interactive terminal. The only credential
+on the machine was a keychain entry under the username `x-access-token`, a GitHub App
+installation token scoped to repositories the app already held, so it could not create
+a new one, and a plain `git push` returned *"Repository not found"* because a push
+cannot bring a repository into existence. The author supplied a personal access token
+with `repo` scope, which cleared it.
 
-    gh auth login                      # interactive, once
-    gh repo create abhisheksharma2411/synb2b-fraud-stream --public --source=. --push
-
-or, if the empty repository is created through the web interface instead, the stored
-keychain credential is enough for:
-
-    git push -u origin main
-
-Nothing else in the deliverable depends on this. The paper's repository URL is written
-as the intended public location, and it is suppressed under `\anontrue`.
+The token was passed through the environment and consumed by an inline credential
+helper, so it is not in `.git/config`, not in the remote URL and not in any tracked
+file; `git grep` over the tree confirms that. It was disclosed in a chat transcript
+during the exchange and should be rotated on that basis alone.
 
 **B-02. IEEE-CIS was not run.** See D-05. No credentials; skipped as the brief allows.
 
