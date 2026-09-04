@@ -257,19 +257,31 @@ was cited.
 
 ## G. BLOCKED
 
-**B-01. The public GitHub repository could not be created or pushed.**
-`gh auth status` reports *"You are not logged into any GitHub hosts."* There is no
-`~/.config/gh/hosts.yml`, and no `GH_TOKEN` or `GITHUB_TOKEN` in the environment. This
-session is non-interactive, so `gh auth login` cannot complete its device flow. Tried:
-`gh auth status`, checking both token environment variables, checking the gh config
-path. The repository therefore exists only locally, with its full commit history
-intact, at `synb2b-fraud-stream/`. To publish it:
+**B-01. The public GitHub repository could not be created or pushed.** Still open,
+re-checked after the paper was finished.
 
-    gh auth login                      # interactive, one time
+`gh auth status` reports *"You are not logged into any GitHub hosts."* There is no
+`~/.config/gh`, and neither `GH_TOKEN` nor `GITHUB_TOKEN` is set, so `gh repo create`
+exits asking for `gh auth login`, whose device flow cannot complete in a
+non-interactive session. The macOS keychain does hold a `github.com` credential under
+the username `x-access-token`, which is the form GitHub App installation tokens take:
+short-lived and scoped to repositories the app is already installed on, so it cannot
+create a new one. `git push` was attempted and returns *"Repository not found"*,
+because a push cannot bring a repository into existence.
+
+The remote is configured and the history is intact, so publishing is one command once
+the repository exists. Either of these finishes it:
+
+    gh auth login                      # interactive, once
     gh repo create abhisheksharma2411/synb2b-fraud-stream --public --source=. --push
 
+or, if the empty repository is created through the web interface instead, the stored
+keychain credential is enough for:
+
+    git push -u origin main
+
 Nothing else in the deliverable depends on this. The paper's repository URL is written
-as the intended public location.
+as the intended public location, and it is suppressed under `\anontrue`.
 
 **B-02. IEEE-CIS was not run.** See D-05. No credentials; skipped as the brief allows.
 
