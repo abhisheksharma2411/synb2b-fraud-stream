@@ -35,6 +35,8 @@ CI_METRICS = [
     # flag validation against oracle feasibility
     "oracle_infeasible_rate", "flag_precision", "flag_recall", "flag_specificity",
     "flag_balanced_acc", "risk_when_flagged", "risk_when_not_flagged",
+    "exh_flag_precision", "exh_flag_recall", "exh_flag_specificity",
+    "exh_flag_balanced_acc", "exh_oracle_infeasible_rate", "oracle_agreement",
 ]
 
 
@@ -55,6 +57,8 @@ def _flatten(r: dict) -> dict:
         "flag_false_infeasible_rate", "flag_missed_infeasible_rate",
         "risk_when_flagged", "risk_when_not_flagged",
         "flag_delay_covariate", "flag_delay_concept", "flag_delay_prior",
+        # assumption-free (exhaustive) oracle + how much A2 matters
+        "exh_flag_precision", "exh_flag_recall", "exh_flag_specificity", "exh_flag_balanced_acc", "exh_oracle_infeasible_rate", "exh_flag_n_scored", "exh_flag_tp", "exh_flag_fp", "exh_flag_fn", "exh_flag_tn", "mono_violation_mean", "oracle_agreement",
     )}
     br = r.get("by_regime", {})
     for k in ("quiet", "covariate", "concept", "prior"):

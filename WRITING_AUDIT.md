@@ -23,30 +23,31 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 
 ## 1. Sentence-length distribution
 
-- sentences: 198
-- mean length: 20.13 words
-- standard deviation: 11.00 words  (gate: >= 11)
-- min 3, max 58
+- sentences: 195
+- mean length: 20.25 words
+- standard deviation: 11.18 words  (gate: >= 11)
+- min 3, max 60
 
 | words | count |
 |---|---|
-| 0-4 | 6 |
-| 5-9 | 28 |
-| 10-14 | 38 |
-| 15-19 | 28 |
-| 20-24 | 39 |
-| 25-29 | 22 |
+| 0-4 | 5 |
+| 5-9 | 30 |
+| 10-14 | 37 |
+| 15-19 | 24 |
+| 20-24 | 37 |
+| 25-29 | 25 |
 | 30-34 | 18 |
 | 35-39 | 8 |
-| 40-44 | 3 |
-| 45-49 | 5 |
+| 40-44 | 4 |
+| 45-49 | 3 |
 | 50-54 | 2 |
 | 55-59 | 1 |
+| 60-64 | 1 |
 
 ## 2. Short and long sentences
 
 - under 8 words: 25 (gate: >= 12)
-- over 35 words: 17 (gate: >= 8)
+- over 35 words: 16 (gate: >= 8)
 
   - short: "abstract Fraud scores are not decisions."
   - short: "A fraud model returns a number."
@@ -54,15 +55,15 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
   - short: "The policy chooses its own labels."
   - short: "This is not staleness."
   - short: "Four things follow."
-  - long: "An item released is labelled only if something surfaces, whether a chargeback representment, a duplicate-payme..."
-  - long: "Split and inductive conformal prediction supply the finite-sample statement , and Gibbs and Cand es replace th..."
-  - long: "Cost-sensitive conformal prediction with human-in-the-loop abstention trades review cost against error in a so..."
-  - long: "Recent work formalises the limits that delayed, censored and corrupted feedback impose in card networks , reco..."
+  - long: "It does treat labels as selective and delayed, and shows action risk is unidentified without restricting label..."
+  - long: "Delayed and partial fraud feedback were documented a decade ago , and recent work formalises the limits that d..."
+  - long: "On that path the ledger shows only the product MATH , so MATH is recovered as a ratio: MATH fitted on matured ..."
+  - long: "Given MATH , the upper threshold MATH is placed by an online quantile so the band carries MATH of traffic, whi..."
 
 ## 3. Paragraph rhythm
 
 - paragraphs: 45
-- sentence counts in order: [12, 4, 4, 6, 3, 5, 5, 4, 5, 4, 4, 3, 6, 5, 6, 7, 5, 1, 2, 4, 3, 5, 1, 4, 4, 3, 3, 2, 3, 2, 4, 4, 9, 4, 8, 5, 6, 6, 3, 4, 6, 2, 5, 1, 6]
+- sentence counts in order: [12, 4, 3, 6, 3, 5, 4, 5, 4, 3, 4, 3, 6, 5, 6, 7, 5, 1, 2, 4, 3, 5, 1, 4, 3, 3, 4, 2, 3, 2, 3, 4, 10, 4, 9, 5, 6, 6, 3, 4, 5, 2, 5, 1, 6]
 - runs of three consecutive equal counts: none
 
 ## 4. Banned vocabulary
@@ -72,7 +73,7 @@ None found. Zero occurrences of every banned word and phrase.
 ## 5. Punctuation and self-reference caps
 
 - em-dashes: 0 (cap 5)
-- semicolons: 4 (cap 8)
+- semicolons: 5 (cap 8)
 - "we propose/present/introduce": 0 (cap 3)
 
 ## 6. Conjunction openers

@@ -276,6 +276,8 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
 
     infeasible_flags: List[int] = []
     oracle_flags: List[int] = []
+    oracle_flags_exh: List[int] = []
+    mono_viols: List[float] = []
     flag_days: List[float] = []
     flag_etrue: List[float] = []
     update_times: List[float] = []
@@ -369,6 +371,24 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
         else:
             _r_o = float("nan")
             oracle_infeasible = -1          # undetermined: too little support to judge
+
+        # Assumption-free oracle. Proposition 1 picks the single boundary threshold,
+        # which is only optimal when the conditional rate is non-decreasing (A2). A2 is
+        # the assumption a real portfolio breaks first, and this generator has five
+        # topologies and a novelty sign flip, so it cannot be taken on trust. Search
+        # every admissible threshold instead and ask whether ANY of them clears alpha
+        # on the true curve. This needs no monotonicity.
+        _g_cap_o = calib.invert_cdf(cdf, 1.0 - _band_o)
+        _adm = np.arange(min(_g_floor_o, _g_cap_o), max(_g_floor_o, _g_cap_o) + 1)
+        _adm = _adm[_den_o[_adm] >= pol.min_support]
+        if len(_adm):
+            _rc = _num_o[_adm] / np.maximum(_den_o[_adm], 1e-12)
+            oracle_infeasible_exh = int(float(np.min(_rc)) > pol.alpha)
+            # how badly A2 fails here: share of admissible steps that go downhill
+            _mono_viol = float(np.mean(np.diff(_rc) < -1e-12)) if len(_rc) > 1 else 0.0
+        else:
+            oracle_infeasible_exh = -1
+            _mono_viol = float("nan")
         t0 += time.perf_counter() - _t_oracle
 
         infeasible = 0
@@ -498,11 +518,15 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                 "tau_lo": float(tau_lo), "tau_hi": float(tau_hi),
                 "alpha_t": float(alpha_t), "infeasible": int(infeasible),
                 "oracle_infeasible": int(oracle_infeasible),
+                "oracle_infeasible_exh": int(oracle_infeasible_exh),
                 "oracle_floor_risk": float(_r_o),
+                "mono_violation": float(_mono_viol),
                 "e_t": float(e_t), "e_true": float(e_true),
             })
         infeasible_flags.append(infeasible)
         oracle_flags.append(oracle_infeasible)
+        oracle_flags_exh.append(oracle_infeasible_exh)
+        mono_viols.append(float(_mono_viol))
         flag_days.append(float(d))
         flag_etrue.append(float(e_true))
         update_times.append(time.perf_counter() - t0)
@@ -510,7 +534,8 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
     summary = _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
                          infeasible_flags, update_times, comp_series, eps,
                          delay_scale_mult, disclose_mult, oracle_pd,
-                         oracle_flags, flag_days, flag_etrue)
+                         oracle_flags, flag_days, flag_etrue,
+                         oracle_flags_exh, mono_viols)
     if keep_arrays:
         # evaluation-stream slices, for the invariant tests. Never serialised.
         sl2 = slice(n0, n)
@@ -525,6 +550,20 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
 
 
 # ---------------------------------------------------------------------------
+
+
+def _oracle_agreement(a, b) -> float | None:
+    """How often the Proposition-1 oracle and the exhaustive one agree.
+
+    They can only differ when the true risk curve is non-monotone over the admissible
+    range, so this doubles as a measure of how much A2 actually matters here.
+    """
+    if not a or not b or len(a) != len(b):
+        return None
+    x, y = np.asarray(a), np.asarray(b)
+    ok = (x >= 0) & (y >= 0)
+    return float((x[ok] == y[ok]).mean()) if ok.any() else None
+
 
 def _score_flag(flags, oracle, days, etrue, ctx) -> dict:
     """Score the budget-infeasibility flag against oracle feasibility.
@@ -591,7 +630,8 @@ def _score_flag(flags, oracle, days, etrue, ctx) -> dict:
 def _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
                infeasible_flags, update_times, comp_series, eps,
                delay_scale_mult, disclose_mult, oracle_pd=False,
-               oracle_flags=None, flag_days=None, flag_etrue=None) -> dict:
+               oracle_flags=None, flag_days=None, flag_etrue=None,
+               oracle_flags_exh=None, mono_viols=None) -> dict:
     n0, n = ctx.n_train, ctx.n
     sl = slice(n0, n)
     a = action[sl]
@@ -770,6 +810,11 @@ def _summarise(ctx, method, pol, action, obs, arrival, channel, demand_review,
         "infeasible_rate": float(np.mean(infeasible_flags)) if infeasible_flags else 0.0,
         "n_updates": len(infeasible_flags),
         **_score_flag(infeasible_flags, oracle_flags, flag_days, flag_etrue, ctx),
+        **{f"exh_{k}": v for k, v in
+           _score_flag(infeasible_flags, oracle_flags_exh, flag_days, flag_etrue, ctx).items()},
+        "mono_violation_mean": (float(np.nanmean(mono_viols))
+                                if mono_viols and not np.all(np.isnan(mono_viols)) else None),
+        "oracle_agreement": _oracle_agreement(oracle_flags, oracle_flags_exh),
         "post_event": post,
         "by_regime": by_regime,
         "estimator_bias": est_bias,
