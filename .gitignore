@@ -15,6 +15,10 @@ data/raw/
 data/**/*.csv
 data/**/*.parquet
 
+# Scratch output of tools/build_paper.py and tools/audit_prose.py.
+paper/.build/
+paper/.audit/
+
 # Environments and caches
 .venv/
 __pycache__/
