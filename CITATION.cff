@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: "If you use this code, the SynB2B-Fraud-Stream extension, or its results, please cite the software entry below."
+title: "synb2b-fraud-stream: budget-constrained conformal risk control for fraud decisioning under drift and endogenous label arrival"
+abstract: >-
+  A selective-decision layer that wraps any fraud scorer: it controls the residual
+  fraud rate on auto-allowed transactions, respects a hard analyst review budget, and
+  stays auditable while the data drifts. The repository also publishes
+  SynB2B-Fraud-Stream, two additive annotation layers over the SynB2B-Fraud benchmark
+  - a three-event drift schedule with distinct covariate, concept and prior
+  mechanisms, and an endogenous label-arrival model in which the policy's own action
+  determines whether, when, and how truthfully each transaction is ever labelled.
+type: software
+authors:
+  - family-names: Sharma
+    given-names: Abhishek
+    orcid: "https://orcid.org/0009-0007-1103-2103"
+    email: abhicse24@gmail.com
+    affiliation: "IEEE Senior Member"
+version: 1.0.0
+date-released: 2026-09-03
+license: Apache-2.0
+repository-code: "https://github.com/abhisheksharma2411/synb2b-fraud-stream"
+url: "https://github.com/abhisheksharma2411/synb2b-fraud-stream"
+keywords:
+  - conformal prediction
+  - conformal risk control
+  - selective classification
+  - fraud detection
+  - B2B payments
+  - concept drift
+  - delayed labels
+  - selective labels
+  - inverse propensity weighting
+references:
+  - type: dataset
+    title: "SynB2B-Fraud: A Synthetic Dataset for Fraud Detection in B2B Payment Networks"
+    authors:
+      - family-names: Sharma
+        given-names: Abhishek
+        orcid: "https://orcid.org/0009-0007-1103-2103"
+    year: 2026
+    publisher:
+      name: Zenodo
+    doi: 10.5281/zenodo.21668281
+    license: CC-BY-4.0
+  - type: article
+    title: "SynB2B-Fraud: An Open Synthetic Benchmark for Fraud Detection in B2B Payment Networks"
+    authors:
+      - family-names: Sharma
+        given-names: Abhishek
+        orcid: "https://orcid.org/0009-0007-1103-2103"
+    year: 2026
+    publisher:
+      name: Zenodo
+    doi: 10.5281/zenodo.21670659
+    license: CC-BY-4.0
