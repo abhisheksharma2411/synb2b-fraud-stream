@@ -2,7 +2,7 @@ PY ?= python3
 export PYTHONPATH := src
 
 .PHONY: help venv test reproduce-small reproduce-full paper-data drift-params \
-        summary audit paper refcheck numbers diagnostics clean
+        summary audit paper refcheck numbers diagnostics anon-artifact clean
 
 help:
 	@echo "make venv             create .venv and install the pinned requirements"
@@ -16,6 +16,7 @@ help:
 	@echo "make refcheck         re-verify every citation against arXiv/Crossref/Zenodo"
 	@echo "make numbers          re-derive every printed number from results.json"
 	@echo "make diagnostics      estimand gap, ESS and propensity error tables"
+	@echo "make anon-artifact    anonymised, history-free export for review"
 	@echo "make audit            run the prose gates over paper/main.tex"
 	@echo "make paper            pdflatex both anonymisation settings, report page counts"
 
@@ -50,6 +51,9 @@ numbers:
 diagnostics:
 	$(PY) tools/make_diagnostics_report.py
 	$(PY) tools/make_flag_report.py
+
+anon-artifact:
+	$(PY) tools/make_anon_artifact.py
 
 audit:
 	$(PY) tools/audit_prose.py paper/main.tex

@@ -557,3 +557,29 @@ in the bibliography but no `\cite` referenced it, which a reviewer spotted. Remo
 it fixes an IEEE-style defect, frees four lines, and removes one of the two entries
 naming the author from a double-blind submission. The dataset record is cited and
 stays. A check for uncited keys now runs alongside the other gates.
+
+**D-49. There is now an anonymous artifact, because "URL withheld for review" gives a
+reviewer nothing.** A reviewer cannot check the estimator, the feasibility oracle or
+the flag scoring without running the code, and the public repository carries the
+author's name. `make anon-artifact` exports the tracked tree via `git archive`, so no
+git history ships, rewrites every author identifier, sets the paper's toggle to the
+anonymous build, and **fails the build if any identifier survives the scan**. It
+caught one on the first run: `tools/build_paper.py` names the identifiers inside its
+own leak-detector list, which the naive substitution missed.
+
+Verified on the export rather than asserted: 55 text files scanned, 8 rewritten, zero
+occurrences of the name, the handle, the email or the ORCID anywhere in the tree, the
+paper compiles from the artifact to 6 pages with `\anontrue` already set, and the
+rendered PDF's author line reads "Author names withheld for review" with zero
+identifier hits in its text.
+
+Upload the archive to whatever anonymous host the venue accepts and replace "URL
+withheld for review" in Section V with that link at submission time.
+
+**D-50. Twenty seeds, fixed and published before the run.** `C.SEEDS` keeps the
+original five so every earlier comparison stays paired, then appends the next fifteen
+primes after 71. The rule is stated in the source next to the list precisely so it
+cannot be read as a set chosen after seeing which seeds were convenient. No seed is
+dropped. Every method sees the same stream under a given seed, so the method contrasts
+stay paired. This replaces five-replicate intervals that the paper had to label
+exploratory.

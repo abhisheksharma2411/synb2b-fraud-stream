@@ -184,4 +184,10 @@ def policy_for(stream: str, **overrides) -> "PolicyConfig":
 
 TRAIN_FRACTION = 0.20
 BOOTSTRAP_RESAMPLES = 10000
-SEEDS = [11, 23, 37, 53, 71]
+# Twenty seeds, fixed before the run and published here rather than chosen after
+# seeing results. The first five are the original set, kept in place so every earlier
+# comparison stays paired; the remaining fifteen are simply the next fifteen primes
+# after 71. No seed is dropped for being inconvenient, and every method sees the same
+# stream under a given seed, so method contrasts are paired throughout.
+SEEDS = [11, 23, 37, 53, 71,
+         73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149]
