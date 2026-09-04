@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile paper/paper_T13.tex under both anonymisation settings and report pages.
+"""Compile paper/main.tex under both anonymisation settings and report pages.
 
 The PDF is a build check, not a deliverable: `.gitignore` excludes it. What this
 asserts is that the single file compiles with pdflatex alone, both ways, inside the
@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAPER = os.path.join(ROOT, "paper", "paper_T13.tex")
+PAPER = os.path.join(ROOT, "paper", "main.tex")
 BUILD = os.path.join(ROOT, "paper", ".build")
 
 LEAKS = [

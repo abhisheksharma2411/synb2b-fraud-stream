@@ -4,7 +4,7 @@
 endogenous label arrival.**
 
 Companion code, data-extension and results for the T13 paper. The paper itself is a
-single self-contained LaTeX file at [`paper/paper_T13.tex`](paper/paper_T13.tex) — no
+single self-contained LaTeX file at [`paper/main.tex`](paper/main.tex) — no
 `.bib`, no external figures, no `\input`; it compiles on Overleaf with `pdflatex`
 alone and carries a one-line toggle for a double-blind build.
 
@@ -156,7 +156,7 @@ src/t13/        config, data + causal features, drift, arrival, scorer,
 tests/          calibration invariants, causality, drift, bit-reproducibility
 tools/          drift calibration, paper data, prose audit, paper build, probes
 results/        results.json, SUMMARY.md, drift_events.json, paper_data.tex
-paper/          paper_T13.tex — the deliverable
+paper/          main.tex — the deliverable
 DECISIONS.md    every assumption, deviation and blocked item
 WRITING_AUDIT.md output of the prose gates
 ```

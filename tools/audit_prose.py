@@ -6,7 +6,7 @@ bibliography - and checks it against the rhythm, vocabulary, structure and numer
 traceability rules. Exits non-zero if any gate fails. No threshold in here may be
 relaxed to make a run pass; fix the prose instead.
 
-    python tools/audit_prose.py paper/paper_T13.tex [--write WRITING_AUDIT.md]
+    python tools/audit_prose.py paper/main.tex [--write WRITING_AUDIT.md]
 """
 from __future__ import annotations
 
@@ -478,7 +478,7 @@ ITERATIONS = [
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("tex", nargs="?", default=os.path.join(ROOT, "paper", "paper_T13.tex"))
+    ap.add_argument("tex", nargs="?", default=os.path.join(ROOT, "paper", "main.tex"))
     ap.add_argument("--write", default=os.path.join(ROOT, "WRITING_AUDIT.md"))
     ap.add_argument("--no-pages", action="store_true")
     a = ap.parse_args()

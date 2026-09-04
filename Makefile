@@ -11,10 +11,10 @@ help:
 	@echo "make reproduce-full   the full grid: 6 methods + oracle, 2 streams, 5 seeds,"
 	@echo "                      9 ablation factors, 10k bootstrap resamples"
 	@echo "make paper-data       regenerate results/paper_data.tex and splice it into"
-	@echo "                      paper/paper_T13.tex between the INLINE-DATA markers"
+	@echo "                      paper/main.tex between the INLINE-DATA markers"
 	@echo "make drift-params     re-solve the drift constants (writes drift_params.json)"
 	@echo "make refcheck         re-verify every citation against arXiv/Crossref/Zenodo"
-	@echo "make audit            run the prose gates over paper/paper_T13.tex"
+	@echo "make audit            run the prose gates over paper/main.tex"
 	@echo "make paper            pdflatex both anonymisation settings, report page counts"
 
 venv:
@@ -43,7 +43,7 @@ refcheck:
 	$(PY) tools/refcheck_arxiv.py
 
 audit:
-	$(PY) tools/audit_prose.py paper/paper_T13.tex
+	$(PY) tools/audit_prose.py paper/main.tex
 
 paper:
 	$(PY) tools/build_paper.py
