@@ -1,0 +1,35 @@
+# The deliverable is the .tex, not a PDF.
+*.pdf
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.toc
+
+# Raw data is fetched from Zenodo / OpenML by `make reproduce-*`, never committed.
+data/raw/
+data/**/*.csv
+data/**/*.parquet
+
+# Environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+scikit_learn_data/
+
+# Credentials. Nothing here should ever exist; if it does, it must not be pushed.
+*.pem
+*.key
+.env
+.env.*
+kaggle.json
+credentials.json
+secrets.*
+
+.DS_Store

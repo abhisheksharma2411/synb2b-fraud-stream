@@ -1,0 +1,22 @@
+# Fully pinned. Built and measured on CPython 3.14.7, macOS 15 (Darwin 25.5.0),
+# Apple M4 Pro. See results/SUMMARY.md for the provenance block of the recorded run.
+lightgbm==4.7.0
+numpy==2.5.2
+pandas==3.0.5
+pyarrow==25.0.1
+pytest==9.1.1
+requests==2.34.2
+scikit-learn==1.9.0
+scipy==1.18.1
+
+# transitive, pinned so the environment resolves identically
+certifi==2026.7.22
+charset-normalizer==3.5.1
+idna==3.19
+iniconfig==2.3.0
+joblib==1.6.0
+packaging==26.3
+pluggy==1.6.0
+python-dateutil==2.9.0.post0
+threadpoolctl==3.6.0
+urllib3==2.7.0

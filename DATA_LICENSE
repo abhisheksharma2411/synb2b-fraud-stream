@@ -1,0 +1,41 @@
+# Data licence
+
+Code in this repository is Apache-2.0 (see `LICENSE`). Data is licensed separately.
+
+## SynB2B-Fraud-Stream (the derived annotation layers in this repository)
+
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+<https://creativecommons.org/licenses/by/4.0/>
+
+This covers the two annotation layers this repository adds — the drift schedule
+(`results/drift_events.json`, `src/t13/drift.py`, `src/t13/drift_params.json`) and the
+endogenous label-arrival model (`src/t13/arrival.py`) — together with every derived
+artefact under `results/`.
+
+### Attribution for the source dataset
+
+These layers are derived from, and are a derivative work of:
+
+> Sharma, Abhishek. *SynB2B-Fraud: A Synthetic Dataset for Fraud Detection in B2B
+> Payment Networks.* Zenodo, 29 July 2026. DOI: 10.5281/zenodo.21668281.
+> Licensed CC BY 4.0.
+
+The source dataset is not redistributed here. `make reproduce-full` fetches it from
+Zenodo at run time. SynB2B-Fraud is fully synthetic; no real payment records, no
+real buyer or supplier identities and no third-party data are contained in it.
+
+Anyone redistributing this repository's derived data must keep the attribution above,
+note that changes were made, and pass on the CC BY 4.0 terms.
+
+## ULB credit-card fraud dataset (not redistributed)
+
+The secondary stream is fetched from OpenML at run time
+(`sklearn.datasets.fetch_openml(data_id=1597)`). It is not included in this repository
+and this licence does not extend to it. It is credited to:
+
+> Dal Pozzolo, A., Caelen, O., Johnson, R. A., and Bontempi, G. *Calibrating
+> Probability with Undersampling for Unbalanced Classification.* IEEE Symposium
+> Series on Computational Intelligence, 2015.
+
+Its terms are those published on its OpenML record; consult them before redistributing
+it. Nothing in this repository grants rights to it.
