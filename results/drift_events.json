@@ -2,7 +2,7 @@
  "synb2b": [
   {
    "kind": "covariate",
-   "index": 10600,
+   "index": 42400,
    "day": 227.5932,
    "magnitude": 0.55,
    "duration_days": Infinity,
@@ -10,7 +10,7 @@
   },
   {
    "kind": "concept",
-   "index": 16000,
+   "index": 64000,
    "day": 312.2681,
    "magnitude": -4.7535,
    "duration_days": 60.0,
@@ -18,7 +18,7 @@
   },
   {
    "kind": "prior",
-   "index": 21000,
+   "index": 84000,
    "day": 388.9368,
    "magnitude": 6.5951,
    "duration_days": 44.0,
@@ -28,24 +28,24 @@
  "ulb": [
   {
    "kind": "covariate",
-   "index": 24152,
-   "day": 238.0134,
+   "index": 120758,
+   "day": 238.0087,
    "magnitude": 0.55,
    "duration_days": Infinity,
    "description": "persistent upward shift of the log invoice amount law; P(y|x) unchanged"
   },
   {
    "kind": "concept",
-   "index": 36456,
-   "day": 359.2671,
+   "index": 182276,
+   "day": 359.2579,
    "magnitude": -5.5949,
    "duration_days": 60.0,
    "description": "sign flip of the supplier-novelty coefficient in the conditional law"
   },
   {
    "kind": "prior",
-   "index": 47848,
-   "day": 471.5331,
+   "index": 239238,
+   "day": 471.5275,
    "magnitude": 6.4289,
    "duration_days": 44.0,
    "description": "base-rate surge over a four-day ramp with a nine-day half-life decay"

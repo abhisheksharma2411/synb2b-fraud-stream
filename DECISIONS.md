@@ -497,3 +497,28 @@ FOR, ratio, review rate and cost is bit-identical to the run before the oracle
 existed. `tests/test_flag_validation.py` asserts the same property directly by
 stubbing the scorer. An oracle that reads latent `y` and could influence a decision
 would make the whole experiment circular, so this is the property that had to hold.
+
+**D-43. The feasibility oracle no longer leans on the assumption it was testing.**
+A reviewer pointed out that scoring the flag with Proposition 1 presumes (A2), the
+monotone conditional rate, which the paper itself calls the assumption a real
+portfolio breaks first. That objection was correct and testable, so both were
+measured.
+
+(A2) does fail: across admissible thresholds on the true risk curve, 0.462 to 0.655
+of steps run downhill depending on the method, 0.600 under M5. The generator has five
+topologies and a novelty sign flip, so a non-monotone conditional rate is what one
+should expect.
+
+It changes nothing measurable. An assumption-free oracle, exhaustively searching every
+admissible threshold and calling the window feasible if any clears alpha, agrees with
+the Proposition 1 oracle on 0.999 to 1.000 of scored windows, and every flag metric is
+identical to three decimals under both. M5 keeps precision 0.900, recall 0.868 and
+balanced accuracy 0.906. The exhaustive oracle is now the one the paper reports, with
+the agreement rate and the (A2) violation rate stated alongside it, because a result
+that survives dropping an assumption is worth more than one that needs it.
+
+**D-44. Wall-clock is the only figure here that is not bit-reproducible.** Three runs
+of the same grid gave M5 p50 of 18.36, 18.03 and 17.98 microseconds. Everything else
+is identical across runs to the last digit, which the diff against earlier results
+files confirms each time: 448 values move and all 448 are timing. The paper now says
+so where it reports the number.

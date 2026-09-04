@@ -80,8 +80,8 @@ CLAIMS = [
     ("VI", "fraud allowed 18,483,140", "M5.fraud_dollars_allowed", m(S["M5"], "fraud_dollars_allowed"), 18483140),
     ("VI", "fraud total 30,002,619", "M5.fraud_dollars_total", m(S["M5"], "fraud_dollars_total"), 30002619),
     ("VI", "M0 fraud allowed 24,417,614", "M0.fraud_dollars_allowed", m(S["M0"], "fraud_dollars_allowed"), 24417614),
-    ("VI", "p50 18.36 us", "M5.update_us_p50", m(S["M5"], "update_us_p50"), 18.03),
-    ("VI", "p99 26.44 us", "M5.update_us_p99", m(S["M5"], "update_us_p99"), 25.53),
+    ("VI", "p50 17.98 us", "M5.update_us_p50", m(S["M5"], "update_us_p50"), 17.98),
+    ("VI", "p99 25.65 us", "M5.update_us_p99", m(S["M5"], "update_us_p99"), 25.65),
     ("VI", "eps=0 ratio 0.871", "ablation.epsilon[0].bias", lvl("epsilon", 0.0)["bias_ratio_warm"]["mean"], 0.871),
     ("VI", "eps=0.120 ratio 0.881", "ablation.epsilon[.12].bias", lvl("epsilon", 0.12)["bias_ratio_warm"]["mean"], 0.881),
     ("VI", "delay=0 infeasible 1.0000", "ablation.delay[0].infeasible", lvl("delay_scale_mult", 0.0)["infeasible_rate"]["mean"], 1.0),
@@ -97,8 +97,8 @@ CLAIMS = [
     ("VI", "ULB M5 ratio 0.944", "ulb.M5.bias_ratio_warm", m(U["M5"], "bias_ratio_warm"), 0.944),
     ("VI", "ULB M4 ratio 0.883", "ulb.M4.bias_ratio_warm", m(U["M4"], "bias_ratio_warm"), 0.883),
     ("VI", "ULB oracle 1.27", "ulb.M5_oracle.bias_ratio_warm", m(U["M5_oracle"], "bias_ratio_warm"), 1.27),
-    ("VI", "ULB M5 p50 20.24 us", "ulb.M5.update_us_p50", m(U["M5"], "update_us_p50"), 19.79),
-    ("VI", "ULB M4 p50 9.67 us", "ulb.M4.update_us_p50", m(U["M4"], "update_us_p50"), 9.41),
+    ("VI", "ULB M5 p50 19.56 us", "ulb.M5.update_us_p50", m(U["M5"], "update_us_p50"), 19.56),
+    ("VI", "ULB M4 p50 9.39 us", "ulb.M4.update_us_p50", m(U["M4"], "update_us_p50"), 9.39),
     ("VI", "ULB alpha 0.000930", "stream_alpha.ulb", R["stream_alpha"]["ulb"], 0.000930),
     # flag validated against oracle feasibility
     ("VII", "M5 flag precision 0.900", "M5.flag_precision", m(S["M5"], "flag_precision"), 0.900),
@@ -111,6 +111,9 @@ CLAIMS = [
     ("VII", "M2 specificity 0.116", "M2.flag_specificity", m(S["M2"], "flag_specificity"), 0.116),
     ("VII", "risk when flagged 0.02206", "M5.risk_when_flagged", m(S["M5"], "risk_when_flagged"), 0.02206),
     ("VII", "risk unflagged 0.009356", "M5.risk_when_not_flagged", m(S["M5"], "risk_when_not_flagged"), 0.009356),
+    ("VII", "A2 violation 0.600", "M5.mono_violation_mean", m(S["M5"], "mono_violation_mean"), 0.600),
+    ("VII", "oracle agreement 1.000", "M5.oracle_agreement", m(S["M5"], "oracle_agreement"), 1.000),
+    ("VII", "exh balanced acc 0.906", "M5.exh_flag_balanced_acc", m(S["M5"], "exh_flag_balanced_acc"), 0.906),
 ]
 
 
