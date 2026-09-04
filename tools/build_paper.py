@@ -78,8 +78,12 @@ def build(anon: bool):
         f.write(patched)
     ok = True
     for _ in range(3):
+        # -halt-on-error matters: without it pdflatex recovers from a fatal
+        # alignment error, still emits a PDF, and a table/preamble column mismatch
+        # sails through the build while audit_prose.py (which does halt) fails.
         r = subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode", "-output-directory", BUILD, tmp],
+            ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+             "-output-directory", BUILD, tmp],
             capture_output=True, text=True, cwd=os.path.join(ROOT, "paper"))
     pdf = os.path.join(BUILD, f"{name}.pdf")
     if not os.path.exists(pdf):

@@ -90,7 +90,7 @@ def main():
     for k in order:
         d = S[k]
         A(f"{names[k]} & {ci(d['for_overall'])} & {ci(d['quiet_for'])} & "
-          f"{ci(d['review_demand_rate'])} & {ci(d['block_rate'])} & "
+          f"{ci(d['review_demand_rate'])} & {ci(d['review_served_rate'])} & "
           f"{ci(d['infeasible_rate'], 3)} & {sig(m(d['cost_per_1k']), 4)} & "
           f"{ci(d['bias_ratio_warm'], 3)} \\\\")
     A("}")
@@ -113,7 +113,7 @@ def main():
     for k in ["M0", "M2", "M4", "M5"]:
         d = U[k]
         A(f"{names[k]} & {ci(d['for_overall'])} & {ci(d['quiet_for'])} & "
-          f"{ci(d['review_demand_rate'])} & {ci(d['block_rate'])} & "
+          f"{ci(d['review_demand_rate'])} & {ci(d['review_served_rate'])} & "
           f"{ci(d['infeasible_rate'], 3)} & {sig(m(d['cost_per_1k']), 4)} & "
           f"{ci(d['bias_ratio_warm'], 3)} \\\\")
     A("}")

@@ -2,7 +2,7 @@ PY ?= python3
 export PYTHONPATH := src
 
 .PHONY: help venv test reproduce-small reproduce-full paper-data drift-params \
-        summary audit paper refcheck clean
+        summary audit paper refcheck numbers clean
 
 help:
 	@echo "make venv             create .venv and install the pinned requirements"
@@ -14,6 +14,7 @@ help:
 	@echo "                      paper/main.tex between the INLINE-DATA markers"
 	@echo "make drift-params     re-solve the drift constants (writes drift_params.json)"
 	@echo "make refcheck         re-verify every citation against arXiv/Crossref/Zenodo"
+	@echo "make numbers          re-derive every printed number from results.json"
 	@echo "make audit            run the prose gates over paper/main.tex"
 	@echo "make paper            pdflatex both anonymisation settings, report page counts"
 
@@ -41,6 +42,9 @@ drift-params:
 
 refcheck:
 	$(PY) tools/refcheck_arxiv.py
+
+numbers:
+	$(PY) tools/check_numbers.py
 
 audit:
 	$(PY) tools/audit_prose.py paper/main.tex
