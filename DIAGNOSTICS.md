@@ -17,8 +17,8 @@ absolute difference per window, `rel` the same relative to the trailing value.
 | M2 cost-thresh | -- | -- | -- | -- | -- | 0 | 0 |
 | M3 aci-budget | -- | -- | -- | -- | -- | 0 | 0 |
 | M4 aci-budget-crc | -- | -- | -- | -- | -- | 0 | 0 |
-| M5 -iap | 0.01368 | 0.01346 | 0.001092 | 0.002506 | 0.07896 | 0.1508 | 0.1838 |
-| M5, oracle p_d | 0.01408 | 0.01423 | 0.001189 | 0.002678 | 0.08858 | 0.1596 | 0.1723 |
+| M5 -iap | 0.0137 | 0.0135 | 0.001092 | 0.002509 | 0.07792 | 0.1509 | 0.1829 |
+| M5, oracle p_d | 0.01405 | 0.01421 | 0.001217 | 0.002683 | 0.09171 | 0.1593 | 0.1716 |
 
 ### Weight information
 
@@ -28,11 +28,11 @@ how many it is worth.
 
 | method | ESS mean | ESS median | ESS p05 | max normalised weight | share held by top 1% |
 |---|---|---|---|---|---|
-| M2 cost-thresh | 1846 | 933.3 | 195.2 | 0.001872 | 0.01124 |
-| M3 aci-budget | 1925 | 951.3 | 191.4 | 0.001885 | 0.01131 |
-| M4 aci-budget-crc | 1956 | 944.5 | 194.2 | 0.001861 | 0.01133 |
-| M5 -iap | 2.987e+04 | 3.702e+04 | 5459 | 6.299e-05 | 0.01178 |
-| M5, oracle p_d | 3e+04 | 3.737e+04 | 5082 | 6.59e-05 | 0.0118 |
+| M2 cost-thresh | 1845 | 930.2 | 194.7 | 0.001873 | 0.01125 |
+| M3 aci-budget | 1925 | 940.4 | 189.6 | 0.001899 | 0.01127 |
+| M4 aci-budget-crc | 1956 | 939.8 | 194.1 | 0.001873 | 0.0113 |
+| M5 -iap | 2.993e+04 | 3.711e+04 | 5481 | 6.271e-05 | 0.01178 |
+| M5, oracle p_d | 3.005e+04 | 3.741e+04 | 5101 | 6.561e-05 | 0.0118 |
 
 ### Disclosure-propensity error
 
@@ -43,7 +43,7 @@ from structural unobserved heterogeneity and not only from estimation noise.
 
 | method | mean abs error | mean squared error | share clipped at a bound |
 |---|---|---|---|
-| M5 -iap | 0.1579 | 0.04649 | 0.03044 |
+| M5 -iap | 0.1566 | 0.04545 | 0.02823 |
 
 ## ULB card portfolio
 
@@ -59,8 +59,8 @@ absolute difference per window, `rel` the same relative to the trailing value.
 | M2 cost-thresh | -- | -- | -- | -- | -- | 0 | 0 |
 | M3 aci-budget | -- | -- | -- | -- | -- | 0 | 0 |
 | M4 aci-budget-crc | -- | -- | -- | -- | -- | 0 | 0 |
-| M5 -iap | 0.000882 | 0.0008984 | 0.0002161 | 0.0004626 | 0.2425 | 0.2303 | 0.219 |
-| M5, oracle p_d | 0.0008839 | 0.0009293 | 0.0001979 | 0.0004389 | 0.2292 | 0.2261 | 0.2 |
+| M5 -iap | 0.0008861 | 0.0009017 | 0.0002125 | 0.0004567 | 0.2276 | 0.2303 | 0.22 |
+| M5, oracle p_d | 0.0008866 | 0.0009238 | 0.0001878 | 0.0004302 | 0.2023 | 0.2262 | 0.2024 |
 
 ### Weight information
 
@@ -70,11 +70,11 @@ how many it is worth.
 
 | method | ESS mean | ESS median | ESS p05 | max normalised weight | share held by top 1% |
 |---|---|---|---|---|---|
-| M2 cost-thresh | 762.9 | 817.9 | 327.4 | 0.001614 | 0.01022 |
-| M3 aci-budget | 766.7 | 827.8 | 327.8 | 0.001607 | 0.01019 |
-| M4 aci-budget-crc | 752.9 | 801.2 | 329.2 | 0.001628 | 0.01029 |
-| M5 -iap | 3.253e+04 | 3.617e+04 | 9516 | 0.0001056 | 0.01091 |
-| M5, oracle p_d | 3.286e+04 | 3.614e+04 | 9610 | 6.201e-05 | 0.01098 |
+| M2 cost-thresh | 758.2 | 815.1 | 325.5 | 0.001622 | 0.01024 |
+| M3 aci-budget | 763.6 | 825.5 | 325.6 | 0.001613 | 0.0102 |
+| M4 aci-budget-crc | 750.1 | 796.8 | 324.1 | 0.001636 | 0.01022 |
+| M5 -iap | 3.251e+04 | 3.617e+04 | 9518 | 0.0001057 | 0.01091 |
+| M5, oracle p_d | 3.279e+04 | 3.61e+04 | 9597 | 6.323e-05 | 0.01097 |
 
 ### Disclosure-propensity error
 
@@ -85,5 +85,5 @@ from structural unobserved heterogeneity and not only from estimation noise.
 
 | method | mean abs error | mean squared error | share clipped at a bound |
 |---|---|---|---|
-| M5 -iap | 0.158 | 0.03535 | 0 |
+| M5 -iap | 0.1582 | 0.0354 | 0 |
 

@@ -6,16 +6,16 @@ then compared at the precision the paper prints. This is stricter than the
 prose gate in `audit_prose.py`, which only asks whether a literal appears
 somewhere in the artefacts and so can be satisfied by coincidence.
 
-**86 claims checked, 0 mismatched.**
+**85 claims checked, 0 mismatched.**
 
 | sec | claim as printed | source | value in results.json | ok |
 |---|---|---|---|---|
-| Abstract | uncorrected estimator reads high by 19.3 | `M4.bias_ratio_warm^-1` | 19.306060487651724 | yes |
-| Abstract | M5 truth/estimate 0.881 | `M5.bias_ratio_warm` | 0.8813797695392459 | yes |
-| Abstract |   CI low 0.834 | `M5.bias_ratio_warm.ci_lo` | 0.833862389950087 | yes |
-| Abstract |   CI high 0.929 | `M5.bias_ratio_warm.ci_hi` | 0.9286763086274913 | yes |
-| Abstract | M5 quiet 0.012511 | `M5.quiet_for` | 0.012511130054764655 | yes |
-| Abstract | M4 quiet 0.012344 | `M4.quiet_for` | 0.012344348567626891 | yes |
+| Abstract | uncorrected estimator reads high by 19.3 | `M4.bias_ratio_warm^-1` | 18.751387041824955 | yes |
+| Abstract | M5 truth/estimate 0.881 | `M5.bias_ratio_warm` | 0.8773186242408733 | yes |
+| Abstract |   CI low 0.834 | `M5.bias_ratio_warm.ci_lo` | 0.8535097975468184 | yes |
+| Abstract |   CI high 0.929 | `M5.bias_ratio_warm.ci_hi` | 0.9026735237363381 | yes |
+| Abstract | M5 quiet 0.012511 | `M5.quiet_for` | 0.012421094677870403 | yes |
+| Abstract | M4 quiet 0.012344 | `M4.quiet_for` | 0.012174151966457542 | yes |
 | IV-E | Prop 2b n_exp >= 786 (eta=1) | `2[(1-a)+eta/3]log(2/d)/(eta^2 a)` | 786 | yes |
 | IV-E | Prop 2b eps >= 0.873 | `786/(b*L)` | 0.8733333333333333 | yes |
 | IV-E | Prop 2b n_exp >= 2748 (eta=.5) | `same, eta=0.5` | 2748 | yes |
@@ -37,63 +37,62 @@ somewhere in the artefacts and so can be satisfied by coincidence.
 | V | concept rel drop 0.6805 | `degradation.concept.rel_drop` | 0.6805375456967595 | yes |
 | V | prior rel RISE 0.3233 | `-degradation.prior.rel_drop` | 0.3232602443094057 | yes |
 | V | span 561.34 d | `stream_facts.span_days` | 561.3446180555555 | yes |
-| VI | M0/M1 quiet 0.017436 | `M0.quiet_for` | 0.017435745407069835 | yes |
-| VI | M0 over target 40.6% | `(M0.quiet/alpha-1)*100` | 40.610850057014815 | yes |
-| VI | M5 over target 0.90% | `(M5.quiet/alpha-1)*100` | 0.8962101190697958 | yes |
-| VI | M4 ratio 0.0518 | `M4.bias_ratio_warm` | 0.051797206407780925 | yes |
-| VI | M3 ratio 0.0844 | `M3.bias_ratio_warm` | 0.08436940511959154 | yes |
-| VI | M2 ratio 0.112 | `M2.bias_ratio_warm` | 0.11219683107176885 | yes |
-| VI | M5 overstatement 13.5% | `(1/ratio-1)*100` | 13.458469840164877 | yes |
-| VI | oracle ratio 1.07 | `M5_oracle.bias_ratio_warm` | 1.0713833679120928 | yes |
-| VI | M5 overall 0.02064 | `M5.for_overall` | 0.02063660754720393 | yes |
-| VI | M4 overall 0.02016 | `M4.for_overall` | 0.020155113452154955 | yes |
-| VI | calib ledger 0.9816 | `M5.calib_w_ledger_final` | 0.9816386101689385 | yes |
-| VI | calib review 0.0158 | `M5.calib_w_review_final` | 0.015762697714780012 | yes |
-| VI | calib explore 0.0026 | `M5.calib_w_explore_final` | 0.002598692116281688 | yes |
-| VI | M5 demand 0.022695 | `M5.review_demand_rate` | 0.022695 | yes |
-| VI | M5 served 0.01806 | `M5.review_served_rate` | 0.01806 | yes |
-| VI | over-budget windows 0.44 | `M5.frac_blocks_demand_over_budget` | 0.44000000000000006 | yes |
-| VI | M5 cost 172993 | `M5.cost_per_1k` | 172992.9219276213 | yes |
-| VI | M2 cost 161420 | `M2.cost_per_1k` | 161420.13217332447 | yes |
-| VI | fraud allowed 18,483,140 | `M5.fraud_dollars_allowed` | 18483140.261946253 | yes |
-| VI | fraud total 30,002,619 | `M5.fraud_dollars_total` | 30002618.72606807 | yes |
-| VI | M0 fraud allowed 24,417,614 | `M0.fraud_dollars_allowed` | 24417614.108798314 | yes |
-| VI | p50 18.62 us | `M5.update_us_p50` | 18.617833591997623 | yes |
-| VI | p99 26.47 us | `M5.update_us_p99` | 26.465729307441507 | yes |
-| VI | eps=0 ratio 0.871 | `ablation.epsilon[0].bias` | 0.8706843829372388 | yes |
-| VI | eps=0.120 ratio 0.881 | `ablation.epsilon[.12].bias` | 0.8813797695392459 | yes |
-| VI | delay=0 infeasible 1.0000 | `ablation.delay[0].infeasible` | 1.0 | yes |
-| VI | delay=0 FOR 0.019487 | `ablation.delay[0].for_overall` | 0.019487087662595135 | yes |
-| VI | M5 infeasible 0.341 | `M5.infeasible_rate` | 0.34124999999999994 | yes |
-| VI | M2 infeasible 0.924 | `M2.infeasible_rate` | 0.9243750000000001 | yes |
-| VI | disclose=2.4 ratio 0.669 | `ablation.disclose[2.4].bias` | 0.6690876766600358 | yes |
-| VI | disclose=2.4 infeas 0.846 | `ablation.disclose[2.4].infeasible` | 0.8462499999999998 | yes |
-| VI | T5 miss 0.0902 | `M5.topology_miss.T5` | 0.09023569023569024 | yes |
-| VI | T3 miss 0.649 | `M5.topology_miss.T3` | 0.648993288590604 | yes |
-| VI | drift miss 0.948 | `M5.topology_miss.D` | 0.9478038629690863 | yes |
-| VI | recovery 18.32 d | `M5.post_covariate_recovery_days` | 18.320298964120383 | yes |
-| VI | ULB M5 ratio 0.944 | `ulb.M5.bias_ratio_warm` | 0.944224254062458 | yes |
-| VI | ULB M4 ratio 0.883 | `ulb.M4.bias_ratio_warm` | 0.883134711797581 | yes |
-| VI | ULB oracle 1.27 | `ulb.M5_oracle.bias_ratio_warm` | 1.2663364476133232 | yes |
-| VI | ULB M5 p50 20.06 us | `ulb.M5.update_us_p50` | 20.060700009344146 | yes |
-| VI | ULB M4 p50 9.58 us | `ulb.M4.update_us_p50` | 9.58246641093865 | yes |
+| VI | M0/M1 quiet 0.017436 | `M0.quiet_for` | 0.017366455686446798 | yes |
+| VI | M0 over target 40.6% | `(M0.quiet/alpha-1)*100` | 40.052061987474175 | yes |
+| VI | M5 over target 0.90% | `(M5.quiet/alpha-1)*100` | 0.17011836992260054 | yes |
+| VI | M4 ratio 0.0518 | `M4.bias_ratio_warm` | 0.05332938826175902 | yes |
+| VI | M3 ratio 0.0844 | `M3.bias_ratio_warm` | 0.08884446517566326 | yes |
+| VI | M2 ratio 0.112 | `M2.bias_ratio_warm` | 0.11626391830846872 | yes |
+| VI | M5 overstatement 13.5% | `(1/ratio-1)*100` | 13.9836739320655 | yes |
+| VI | oracle ratio 1.07 | `M5_oracle.bias_ratio_warm` | 1.0862191872278957 | yes |
+| VI | M5 overall 0.02064 | `M5.for_overall` | 0.020679458924085906 | yes |
+| VI | M4 overall 0.02016 | `M4.for_overall` | 0.020110791538572093 | yes |
+| VI | calib ledger 0.9816 | `M5.calib_w_ledger_final` | 0.9807990630015782 | yes |
+| VI | calib review 0.0158 | `M5.calib_w_review_final` | 0.0168783257259506 | yes |
+| VI | calib explore 0.0026 | `M5.calib_w_explore_final` | 0.002322611272471339 | yes |
+| VI | M5 demand 0.022695 | `M5.review_demand_rate` | 0.022866875000000002 | yes |
+| VI | M5 served 0.01806 | `M5.review_served_rate` | 0.018475625 | yes |
+| VI | over-budget windows 0.44 | `M5.frac_blocks_demand_over_budget` | 0.5200000000000001 | yes |
+| VI | M5 cost 172993 | `M5.cost_per_1k` | 173129.1093129735 | yes |
+| VI | M2 cost 161420 | `M2.cost_per_1k` | 160220.64599699326 | yes |
+| VI | fraud allowed 18,483,140 | `M5.fraud_dollars_allowed` | 18502948.2657829 | yes |
+| VI | fraud total 30,002,619 | `M5.fraud_dollars_total` | 30008053.044572007 | yes |
+| VI | M0 fraud allowed 24,417,614 | `M0.fraud_dollars_allowed` | 24616913.385526657 | yes |
+| VI | p50 18.62 us | `M5.update_us_p50` | 18.55983889690833 | yes |
+| VI | p99 26.47 us | `M5.update_us_p99` | 33.16927583534562 | yes |
+| VI | eps=0 ratio 0.871 | `ablation.epsilon[0].bias` | 0.8661436610447927 | yes |
+| VI | eps=0.120 ratio 0.881 | `ablation.epsilon[.12].bias` | 0.8773186242408733 | yes |
+| VI | delay=0 infeasible 1.0000 | `ablation.delay[0].infeasible` | 0.99875 | yes |
+| VI | delay=0 FOR 0.019487 | `ablation.delay[0].for_overall` | 0.01925805109454068 | yes |
+| VI | M5 infeasible 0.341 | `M5.infeasible_rate` | 0.32125 | yes |
+| VI | M2 infeasible 0.924 | `M2.infeasible_rate` | 0.9220312500000001 | yes |
+| VI | disclose=2.4 ratio 0.669 | `ablation.disclose[2.4].bias` | 0.6603507190313114 | yes |
+| VI | disclose=2.4 infeas 0.846 | `ablation.disclose[2.4].infeasible` | 0.74734375 | yes |
+| VI | T5 miss 0.0902 | `M5.topology_miss.T5` | 0.08097643097643098 | yes |
+| VI | T3 miss 0.649 | `M5.topology_miss.T3` | 0.6706375838926174 | yes |
+| VI | drift miss 0.948 | `M5.topology_miss.D` | 0.9478877921258787 | yes |
+| VI | recovery 18.32 d | `M5.post_covariate_recovery_days` | 19.110154537615756 | yes |
+| VI | ULB M5 ratio 0.944 | `ulb.M5.bias_ratio_warm` | 0.9026512374283258 | yes |
+| VI | ULB M4 ratio 0.883 | `ulb.M4.bias_ratio_warm` | 0.784754457300658 | yes |
+| VI | ULB oracle 1.27 | `ulb.M5_oracle.bias_ratio_warm` | 1.210291767617214 | yes |
+| VI | ULB M5 p50 20.06 us | `ulb.M5.update_us_p50` | 20.055225599207915 | yes |
+| VI | ULB M4 p50 9.58 us | `ulb.M4.update_us_p50` | 9.551807800016832 | yes |
 | VI | ULB alpha 0.000930 | `stream_alpha.ulb` | 0.00093 | yes |
-| VII | M5 flag precision 0.900 | `M5.flag_precision` | 0.9002142403051494 | yes |
-| VII | M5 flag recall 0.868 | `M5.flag_recall` | 0.868252942286903 | yes |
-| VII | M5 balanced acc 0.906 | `M5.flag_balanced_acc` | 0.9061979861792185 | yes |
-| VII | M3 balanced acc 0.853 | `M3.flag_balanced_acc` | 0.8534166359630045 | yes |
-| VII | M4 balanced acc 0.736 | `M4.flag_balanced_acc` | 0.735507507382424 | yes |
-| VII | oracle rate 0.351 | `M5.oracle_infeasible_rate` | 0.35124999999999995 | yes |
-| VII | M2 recall 1.000 | `M2.flag_recall` | 1.0 | yes |
-| VII | M2 specificity 0.116 | `M2.flag_specificity` | 0.11629447031331411 | yes |
-| VII | risk when flagged 0.02206 | `M5.risk_when_flagged` | 0.022057569637531603 | yes |
-| VII | risk unflagged 0.009356 | `M5.risk_when_not_flagged` | 0.009356422154969107 | yes |
-| VII | A2 violation 0.600 | `M5.mono_violation_mean` | 0.6000262659507365 | yes |
+| VII | M5 flag precision 0.900 | `M5.flag_precision` | 0.9237710499748208 | yes |
+| VII | M5 flag recall 0.868 | `M5.flag_recall` | 0.8399318713526451 | yes |
+| VII | M5 balanced acc 0.906 | `M5.flag_balanced_acc` | 0.897972605018764 | yes |
+| VII | M3 balanced acc 0.853 | `M3.flag_balanced_acc` | 0.8545396470565436 | yes |
+| VII | M4 balanced acc 0.736 | `M4.flag_balanced_acc` | 0.7311399833905676 | yes |
+| VII | oracle rate 0.351 | `M5.oracle_infeasible_rate` | 0.348125 | yes |
+| VII | M2 recall 1.000 | `M2.flag_recall` | 0.9990867389491243 | yes |
+| VII | M2 specificity 0.116 | `M2.flag_specificity` | 0.11868828155492472 | yes |
+| VII | risk when flagged 0.02206 | `M5.risk_when_flagged` | 0.022669393472427805 | yes |
+| VII | risk unflagged 0.009356 | `M5.risk_when_not_flagged` | 0.009542564805050197 | yes |
+| VII | A2 violation 0.600 | `M5.mono_violation_mean` | 0.5975714168033261 | yes |
 | VII | oracle agreement 1.000 | `M5.oracle_agreement` | 1.0 | yes |
-| VII | exh balanced acc 0.906 | `M5.exh_flag_balanced_acc` | 0.9061979861792185 | yes |
-| IV-B | estimand rel gap 0.07896 | `M5.gap_overlap_rel` | 0.07896325498571773 | yes |
-| IV-B | trimmed rows 0.1508 | `M5.trim_share_mean` | 0.150801926358978 | yes |
-| IV-B | trimmed fraud 0.1838 | `M5.trim_fraud_share_mean` | 0.18382733775199905 | yes |
-| IV-C | ESS median 37023 | `M5.ess_median` | 37023.22899094328 | yes |
-| VII | p_d MAE 0.1579 | `M5.pd_mae_mean` | 0.1579435810410228 | yes |
+| VII | exh balanced acc 0.906 | `M5.exh_flag_balanced_acc` | 0.897972605018764 | yes |
+| IV-B | estimand rel gap 0.07896 | `M5.gap_overlap_rel` | 0.07792335868667631 | yes |
+| IV-B | trimmed rows 0.1508 | `M5.trim_share_mean` | 0.15086906813710715 | yes |
+| IV-B | trimmed fraud 0.1838 | `M5.trim_fraud_share_mean` | 0.18292302753444625 | yes |
+| VII | p_d MAE 0.1579 | `M5.pd_mae_mean` | 0.15660919567245693 | yes |
 
