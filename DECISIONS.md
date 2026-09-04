@@ -184,8 +184,13 @@ the latter is at least `r(t1) >= R(t1)`. Hence
 > equivalently `alpha >= alpha_min(b) := R(F^{-1}(1 - beta - b(1-eps)))`,
 > and `alpha_min` is non-increasing in `b`.
 
-If (A2) fails the "only if" survives but the "if" does not — the optimal allow set
-need no longer be an interval in the score. The implementation raises the flag on the
+If (A2) fails the "if" survives and the "only if" does not. This entry originally
+said the reverse, and the paper repeated it until an external review caught it.
+Sufficiency is immediate: `tau_lo = F^-1(q)` is admissible whenever its risk clears
+`alpha`. Necessity fails because a non-monotone `r` lets a larger threshold carry
+lower cumulative risk. Counterexample, uniform scores, `r = 0.9` on `[0, 0.5]` and 0
+above, `q = alpha = 0.5`: the condition reads `R(0.5) = 0.90 > 0.5` and yet
+`tau_lo = 1.0` is admissible with `R = 0.45 <= alpha`. The implementation raises the flag on the
 *estimated* `R`, so the guarantee is only as good as the estimator, which is the
 subject of Proposition 2. Measured `alpha_min` per regime is in `results.json`.
 
@@ -403,3 +408,44 @@ paragraphs opened with a bare numeral ("Four things follow", "Three channels",
 rewritten.
 
 All thirteen prose gates still pass and both builds are still 6 pages.
+
+---
+
+## J. Response to external peer review
+
+**D-37. A PhD-level review returned weak reject / major revision, and it was right
+about the biggest thing.** The full disposition is in `REVISION_AUDIT.md`. Four
+findings were accepted as defects and fixed, three were rejected with evidence, and
+six are recorded as REQUIRES-RUN and are not claimed in the paper.
+
+The lead finding: the sentence after Proposition 1 had its implication reversed.
+Without monotonicity the feasibility condition remains *sufficient* and stops being
+*necessary*; the paper asserted the opposite. It came from D-19 above, written in an
+earlier session, and I carried it into the paper without re-deriving it. My own
+adversarial pass (D-36) checked the proposition and missed the sentence after it,
+which is the specific failure worth remembering: **verifying a theorem is not the
+same as verifying the prose that interprets it.**
+
+Two rejections are worth recording because they turned on reading the code rather
+than the paper. The review argued the observation model and Proposition 2 describe
+different processes; `simulate.py:316` shows `disclosed = (y[i] == 1) and (...)`, so
+disclosure fires only for true frauds, `Ytilde = Y*D` holds exactly, and the
+proposition was right while the Section IV-A prose was wrong. The review also
+suspected the two Zenodo references were duplicates; the Zenodo API returns
+`resource_type: dataset` for one and `publication` for the other, so both stay.
+
+**D-38. `build_paper.py` was hiding a fatal LaTeX error.** It ran `pdflatex` without
+`-halt-on-error`, so when the generated table body carried nine fields against an
+eight-column preamble, LaTeX reported `! Extra alignment tab has been changed to
+\cr`, recovered, and still produced a PDF that the build called OK. Only
+`audit_prose.py`, which does halt, failed. The flag is now set in both. The
+underlying mismatch came from my own edit to `make_paper_data.py` that used
+`str.replace` without asserting the pattern matched, so it silently did nothing:
+every generator edit in that file now asserts its match count.
+
+**D-39. Numeric claims are now checked against their source field, not just against
+the artefact.** `audit_prose.py` gate 7 only asks whether a literal appears somewhere
+in `results.json`, which a wrong digit can satisfy by coincidence.
+`tools/check_numbers.py` re-derives all 68 printed numbers from the specific field
+each comes from and writes `NUMERICAL_CHECKS.md`. Current run: 68 checked, 0
+mismatched. Run it with `make numbers`.

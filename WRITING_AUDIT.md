@@ -23,29 +23,30 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 
 ## 1. Sentence-length distribution
 
-- sentences: 187
-- mean length: 20.78 words
-- standard deviation: 11.16 words  (gate: >= 11)
-- min 2, max 53
+- sentences: 199
+- mean length: 19.79 words
+- standard deviation: 11.14 words  (gate: >= 11)
+- min 3, max 58
 
 | words | count |
 |---|---|
-| 0-4 | 9 |
-| 5-9 | 23 |
-| 10-14 | 33 |
+| 0-4 | 8 |
+| 5-9 | 30 |
+| 10-14 | 38 |
 | 15-19 | 27 |
-| 20-24 | 31 |
+| 20-24 | 36 |
 | 25-29 | 23 |
 | 30-34 | 18 |
-| 35-39 | 14 |
-| 40-44 | 4 |
-| 45-49 | 2 |
-| 50-54 | 3 |
+| 35-39 | 10 |
+| 40-44 | 2 |
+| 45-49 | 4 |
+| 50-54 | 1 |
+| 55-59 | 2 |
 
 ## 2. Short and long sentences
 
-- under 8 words: 19 (gate: >= 12)
-- over 35 words: 22 (gate: >= 8)
+- under 8 words: 28 (gate: >= 12)
+- over 35 words: 17 (gate: >= 8)
 
   - short: "abstract Fraud scores are not decisions."
   - short: "A fraud model returns a number."
@@ -53,15 +54,15 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
   - short: "The policy chooses its own labels."
   - short: "This is not staleness."
   - short: "Four things follow."
-  - long: "Downstream of the score a payment is released, parked for dual-control approval, or dropped into an analyst's ..."
-  - long: "An item released on the auto-allow path is labelled only if something surfaces, whether a chargeback represent..."
-  - long: "Concurrent and independent work by Deng asks when fraud operations may authorize automation at all, under shar..."
-  - long: "It also treats label arrival as exogenous, which is the assumption this paper spends its length attacking, and..."
+  - long: "An item released is labelled only if something surfaces, whether a chargeback representment, a duplicate-payme..."
+  - long: "Split and inductive conformal prediction supply the finite-sample statement , and Gibbs and Cand es replace th..."
+  - long: "Cost-sensitive conformal prediction with human-in-the-loop abstention trades review cost against error in a so..."
+  - long: "Recent work formalises the limits that delayed, censored and corrupted feedback impose in card networks , reco..."
 
 ## 3. Paragraph rhythm
 
-- paragraphs: 44
-- sentence counts in order: [10, 4, 2, 6, 3, 5, 4, 6, 3, 4, 4, 3, 5, 6, 6, 1, 3, 5, 4, 5, 2, 4, 2, 3, 4, 2, 4, 3, 4, 4, 7, 5, 5, 6, 5, 7, 6, 6, 4, 3, 4, 3, 4, 1]
+- paragraphs: 46
+- sentence counts in order: [12, 4, 4, 6, 3, 5, 5, 4, 5, 4, 4, 3, 6, 5, 6, 5, 5, 1, 2, 4, 3, 5, 1, 4, 4, 3, 3, 2, 3, 2, 4, 4, 9, 4, 8, 6, 6, 7, 3, 5, 4, 3, 5, 1, 6, 1]
 - runs of three consecutive equal counts: none
 
 ## 4. Banned vocabulary
@@ -71,12 +72,12 @@ None found. Zero occurrences of every banned word and phrase.
 ## 5. Punctuation and self-reference caps
 
 - em-dashes: 0 (cap 5)
-- semicolons: 6 (cap 8)
+- semicolons: 3 (cap 8)
 - "we propose/present/introduce": 0 (cap 3)
 
 ## 6. Conjunction openers
 
-- sentences opening with But/So/Yet/And/Then: 8 (gate: >= 6)
+- sentences opening with But/So/Yet/And/Then: 7 (gate: >= 6)
 
 ## 7. Numeric traceability
 
