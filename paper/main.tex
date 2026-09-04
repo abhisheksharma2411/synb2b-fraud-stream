@@ -54,13 +54,13 @@
 
 % TABLE I body: methods on SynB2B-Fraud-Stream
 \newcommand{\TableMethodsBody}{%
-M0 \textsc{static} & 0.02474 & 0.01744 & 0.05028 & 0.0007575 & 0 & 224413 & -- \\
-M1 \textsc{conf-fixed} & 0.02474 & 0.01744 & 0.05028 & 0.0007575 & 0 & 224413 & -- \\
-M2 \textsc{cost-thresh} & 0.01967 & 0.01150 & 0.02424 & 0.08695 & 0.924 & 161420 & 0.112 \\
-M3 \textsc{aci-budget} & 0.02010 & 0.01246 & 0.02504 & 0.04230 & 0.288 & 165645 & 0.0844 \\
-M4 \textsc{aci-budget-crc} & 0.02016 & 0.01234 & 0.02568 & 0.03663 & 0.312 & 167385 & 0.0518 \\
-\textbf{M5 \textsc{-iap}} & 0.02064 & 0.01251 & 0.02269 & 0.02830 & 0.341 & 172993 & 0.881 \\
-\quad M5, oracle $p_d$ & 0.02109 & 0.01283 & 0.02216 & 0.01822 & 0.224 & 178527 & 1.07 \\
+M0 \textsc{static} & 0.02474 & 0.01744 & 0.05028 & 0.01996 & 0 & 224413 & -- \\
+M1 \textsc{conf-fixed} & 0.02474 & 0.01744 & 0.05028 & 0.01996 & 0 & 224413 & -- \\
+M2 \textsc{cost-thresh} & 0.01967 & 0.01150 & 0.02424 & 0.01912 & 0.924 & 161420 & 0.112 \\
+M3 \textsc{aci-budget} & 0.02010 & 0.01246 & 0.02504 & 0.01886 & 0.288 & 165645 & 0.0844 \\
+M4 \textsc{aci-budget-crc} & 0.02016 & 0.01234 & 0.02568 & 0.01891 & 0.312 & 167385 & 0.0518 \\
+\textbf{M5 \textsc{-iap}} & 0.02064 & 0.01251 & 0.02269 & 0.01806 & 0.341 & 172993 & 0.881 \\
+\quad M5, oracle $p_d$ & 0.02109 & 0.01283 & 0.02216 & 0.01775 & 0.224 & 178527 & 1.07 \\
 }
 
 % TABLE II body: exploration ablation on SynB2B-Fraud-Stream (M5)
@@ -76,10 +76,10 @@ M4 \textsc{aci-budget-crc} & 0.02016 & 0.01234 & 0.02568 & 0.03663 & 0.312 & 167
 
 % TABLE III body: external validity, ULB card portfolio
 \newcommand{\TableUlbBody}{%
-M0 \textsc{static} & 0.0009453 & 0.0003149 & 0.02297 & 0.0003397 & 0 & 363.0 & -- \\
-M2 \textsc{cost-thresh} & 0.0008918 & 0.0002944 & 0.02079 & 0.03088 & 0.383 & 476.3 & 0.938 \\
-M4 \textsc{aci-budget-crc} & 0.0009467 & 0.0003195 & 0.02053 & 0.001864 & 0.0187 & 376.4 & 0.883 \\
-\textbf{M5 \textsc{-iap}} & 0.0009034 & 0.0003001 & 0.02065 & 0.02656 & 0.338 & 469.1 & 0.944 \\
+M0 \textsc{static} & 0.0009453 & 0.0003149 & 0.02297 & 0.01822 & 0 & 363.0 & -- \\
+M2 \textsc{cost-thresh} & 0.0008918 & 0.0002944 & 0.02079 & 0.01832 & 0.383 & 476.3 & 0.938 \\
+M4 \textsc{aci-budget-crc} & 0.0009467 & 0.0003195 & 0.02053 & 0.01803 & 0.0187 & 376.4 & 0.883 \\
+\textbf{M5 \textsc{-iap}} & 0.0009034 & 0.0003001 & 0.02065 & 0.01831 & 0.338 & 469.1 & 0.944 \\
 }
 
 % FIGURE 3: realised risk on the auto-allow path, per 2000-transaction block
@@ -118,7 +118,7 @@ M4 \textsc{aci-budget-crc} & 0.0009467 & 0.0003195 & 0.02053 & 0.001864 & 0.0187
 \newcommand{\AlphaUlb}{0.000930}
 % <<< INLINE-DATA END
 
-\title{Budget-Constrained Conformal Risk Control for\\Fraud Decisioning under Drift and
+\title{Budget-Constrained Risk Calibration for\\Fraud Decisioning under Drift and
 Endogenous Label Arrival}
 
 \ifanon
@@ -138,20 +138,21 @@ ORCID 0009-0007-1103-2103}}
 Fraud scores are not decisions. An accounts-payable team releases a payment, holds it
 for dual-control approval, or routes it to an analyst, and the queue that receives it
 has a fixed size. This work wraps a frozen scorer in a selective-decision layer that
-controls the false-omission rate on auto-released traffic under a hard review budget.
+targets the false-omission rate on auto-released traffic under a hard review budget.
 The awkward part is that the policy chooses which labels it will ever see. Reviewed
-items come back adjudicated within hours, released items are labelled only if a
-dispute or a reconciliation exception surfaces, and held items are never labelled at
-all. Calibration data therefore piles up in the review band, which sits at mid score,
-while the quantity under control lives in the low-score tail. We derive a checkable
-condition under which a target risk and a review budget are jointly attainable, and a
-concentration bound on the exploration effort that keeps calibration valid. On a
-100,000-invoice B2B stream carrying three injected drift events, an uncorrected
-estimator overstates auto-release risk by a factor of 19.3 in steady state.
-Inverse-arrival-propensity reweighting with a 0.120 exploration allocation moves the
-ratio of truth to estimate up to 0.881 [0.834, 0.929], and quiet-regime risk lands at
-0.012511 against a target of 0.0124. The exploration bound itself comes out vacuous,
-and we report the measured rate in its place.
+items come back adjudicated within hours, an allowed fraud is recorded only if a
+dispute or a reconciliation exception surfaces, and held items are never labelled.
+Calibration data therefore piles up in the review band, at mid score, while the
+quantity being tracked lives in the low-score tail. We give a feasibility condition
+relating target, budget and score law, and an identification result for what random
+exploration buys. On a 100,000-invoice B2B stream carrying
+three injected drift events, an uncorrected estimator reads auto-release risk high by
+a factor of 19.3 over matured windows. Arrival-propensity reweighting with a 0.120
+exploration allocation moves the truth-to-estimate ratio to 0.881 [0.834, 0.929].
+Realised risk does not improve: quiet-regime risk is 0.012511 against 0.012344 without
+the correction, both near the 0.0124 target rather than under it. What the correction
+buys is a believable estimate and a usable infeasibility signal, not less fraud. The
+exploration bound is vacuous, and we report the measured curve instead.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -163,27 +164,27 @@ classification, delayed labels, B2B payments
 
 A fraud model returns a number. Nobody pays a number. Downstream of the score a
 payment is released, parked for dual-control approval, or dropped into an analyst's
-queue, and the size of that queue was fixed by headcount and an alert-queue SLA long
-before anyone trained the model. Risk lands in that decision layer, which in most
-shops is a pair of thresholds somebody moved last quarter and nobody has revisited
-since.
+queue whose size was fixed by headcount and an alert-queue SLA long before anyone
+trained the model. Risk lands in that decision layer, which in most shops is a pair of
+thresholds somebody moved last quarter.
 
 Conformal prediction is the obvious tool for the job, since it turns a score into a
 guarantee that holds in finite samples and asks almost nothing of the model that
-produced it. Applying it here runs into a constraint the conformal literature rarely
-carries: the abstention region has a hard capacity, because analysts cost money and a
-payments organisation employs a countable number of them.
+produced it. Applying it here runs into a constraint most of that literature leaves out.
+The abstention region has a hard capacity, because analysts cost money and a payments
+organisation employs a countable number of them. Active risk-controlling prediction
+sets do budget labels~\cite{xu2024active}, but they budget queries to an oracle rather
+than an operational queue that also decides the outcome.
 
 There is a second constraint, and it is the one this paper is about. The policy
-chooses its own labels. An item sent to review comes back adjudicated within hours,
-clean and correct. An item released on the auto-allow path is labelled only if
-something surfaces, whether a chargeback representment, a duplicate-payment write-off
-or a three-way match that fails at reconciliation, and on invoice fraud that takes 30
-to 180 days when it happens at all. An item held for dual-control approval is never
-labelled, because nobody ever learns what the payment would have done. So the
-calibration set available at any moment is dominated by review-band items, and the
-review band sits at mid score by construction, while the risk under control lives in
-the low-score tail.
+chooses its own labels. An item sent to review comes back adjudicated within hours. An
+item released is labelled only if something surfaces, whether a chargeback
+representment, a duplicate-payment write-off or a three-way match that fails at
+reconciliation, and on invoice fraud that takes 30 to 180 days when it happens at all.
+An item held for dual-control approval is never labelled, because nobody learns what
+the payment would have done. So the calibration set is dominated by review-band items,
+which sit at mid score by construction, while the risk being tracked lives in the low-
+score tail.
 
 This is not staleness. It is bias, and filtering the calibration window by arrival
 time does not repair it, because the items that never arrive are exactly the ones the
@@ -191,63 +192,63 @@ guarantee is about. Tighten the budget and calibration starves in the region tha
 needs it most, while the estimate of risk stays flat and every drift detector watching
 the score distribution stays quiet.
 
-Four things follow. A feasibility condition, stated as an equivalence under three
-assumptions, that says when a target risk and a review budget can hold together at
-all. A minimum-exploration argument in two parts, of which the identification half
-survives and the rate half does not. A data extension, SynB2B-Fraud-Stream, that
-annotates a published B2B invoice benchmark with three drift events and an
-action-dependent arrival process, together with an empirical study spanning two
+Four things follow. A feasibility condition, an equivalence under three assumptions,
+for when a target and a review budget can hold together at all. A minimum-exploration
+argument in two parts, of which the identification half survives and the rate half
+does not. A data extension, SynB2B-Fraud-Stream, annotating a published B2B benchmark
+with three drift events and an action-dependent arrival process, with a study over two
 streams, six methods and five seeds. And a measurement of how wrong the naive
-estimator gets, which is the number an operations director asks for first.
+estimator gets.
 
 \section{Related Work}
 
 Concurrent and independent work by Deng~\cite{deng2026} asks when fraud operations may
 authorize automation at all, under shared analyst capacity, with finite-sample risk
-control built on a KL divergence and an evaluation across three public fraud corpora.
-The overlap is real and the framing is close. But that framework is not conformal, it
-recalibrates nothing online, and it treats drift as a governance parameter somebody
-declares rather than a process the policy has to track. It also treats label arrival
-as exogenous, which is the assumption this paper spends its length attacking, and
-while it does use randomized audit propensities, those exist to produce authorization
-evidence; the randomization here exists to keep a calibration set identified, which is
-a different job.
+control built on a KL divergence across three public fraud corpora. The overlap is
+real. But that framework is not conformal, recalibrates nothing online, and treats
+drift as a governance parameter somebody declares rather than a process the policy
+tracks. It also treats label arrival as exogenous, which is the assumption this paper
+attacks. Its randomized audit propensities produce authorization evidence, whereas
+randomization here keeps a calibration set identified.
 
-The calibration machinery is borrowed rather than invented. Split conformal prediction
-and its inductive form supply the finite-sample statement~\cite{vovk2005,
-papadopoulos2002}. Gibbs and Cand\`es replace the fixed quantile with an online
-recursion that adapts under shift and later extend it to arbitrary
-shifts~\cite{gibbs2021, gibbs2024}. Conformal risk control generalises coverage to
-any monotone risk~\cite{angelopoulos2024}, with risk-controlling prediction sets as
-the batch antecedent~\cite{bates2021}. Feldman and colleagues give the online version,
-which is the recursion this policy runs~\cite{feldman2022}. Barber and colleagues
-establish what survives when exchangeability fails, which on a card portfolio it does
-within hours~\cite{barber2023}, and a PID formulation adds integral and derivative
-terms to the same update~\cite{angelopoulos2023}.
+The calibration machinery is borrowed rather than invented. Split and inductive
+conformal prediction supply the finite-sample statement~\cite{vovk2005,
+papadopoulos2002}, and Gibbs and Cand\`es replace the fixed quantile with an online
+recursion that adapts under shift and then under arbitrary shifts~\cite{gibbs2021,
+gibbs2024}; conformal risk control generalises coverage to any monotone
+risk~\cite{angelopoulos2024}, with risk-controlling prediction sets as the batch
+antecedent~\cite{bates2021}. Feldman and colleagues give the online version this
+policy runs~\cite{feldman2022}. Barber and colleagues establish what survives when
+exchangeability fails, which on a card portfolio it does within
+hours~\cite{barber2023}, and a PID formulation adds integral and derivative terms to
+the same update~\cite{angelopoulos2023}.
 
 Selective classification supplies the abstention vocabulary~\cite{geifman2017,
 geifman2019} and learning to defer supplies the cost of routing to a
-human~\cite{mozannar2020}. Neither caps how often the human may be asked.
+human~\cite{mozannar2020}. Neither caps how often the human may be asked. Active,
+anytime-valid risk-controlling prediction sets do, and they hold their guarantee under
+a fixed label budget~\cite{xu2024active}. There the budget governs which labels are
+purchased, whereas here the same queue both purchases the label and executes the
+decision, so spending it changes the outcome as well as the evidence.
 Cost-sensitive conformal prediction with human-in-the-loop abstention trades review
 cost against error in a soft objective over fifteen imbalanced batch
 datasets~\cite{singh2026}, and Selective Conformal Risk Control certifies risk after
 selection on exchangeable vision data, again with no budget~\cite{xu2026}.
 
 Online shift detection with conformal adaptation is the nearest prior art to the audit
-protocol here, and it monitors: no actions, no capacity constraint, no path from the
-decision back into the data~\cite{leong2026}. Audited conformal prediction under
-unknown shift~\cite{zhou2026} and anytime-valid conformal risk
-control~\cite{hultberg2026} both tighten what a running system can certify. On the
-fraud side the practitioner literature documented delayed and partial feedback a
-decade ago~\cite{dalpozzolo2014, dalpozzolo2018}. Recent work formalises the limits
-that delayed, censored and corrupted feedback impose in card
-networks~\cite{dhama2026a}, studies causal label recovery in payment
-graphs~\cite{dhama2026b}, and folds corrupted feedback into online conformal
-prediction~\cite{wang2026}, while the selective-labels problem names the general
-obstacle: a decision that suppresses an outcome also suppresses the evidence about
-it~\cite{lakkaraju2017}.
+protocol here, and it monitors: no actions, no capacity, no path from the decision
+back into the data~\cite{leong2026}. Audited conformal prediction~\cite{zhou2026} and
+anytime-valid risk control~\cite{hultberg2026} tighten what a running system can
+certify. On the fraud side, delayed and partial feedback were documented a decade
+ago~\cite{dalpozzolo2014, dalpozzolo2018}. Recent work formalises the limits that
+delayed, censored and corrupted feedback impose in card networks~\cite{dhama2026a},
+recovers labels causally in payment graphs~\cite{dhama2026b}, and folds corrupted
+feedback into online conformal prediction~\cite{wang2026}, while the selective-labels
+problem names the obstacle: a decision that suppresses an outcome suppresses the
+evidence about it~\cite{lakkaraju2017}.
 
 \section{Problem Formulation}
+\label{sec:prob}
 
 Transactions arrive in time order. Transaction $t$ carries features $x_t$, an invoice
 amount $v_t$ and a label $y_t \in \{0,1\}$ that may or may not ever be observed. A
@@ -269,43 +270,68 @@ analyst may not exceed $b$. Held volume is capped at $\beta$, which in accounts 
 is a working-capital limit rather than a risk limit, since a hold delays a supplier
 payment and delayed suppliers stop shipping.
 
-The filtration is where this departs from the usual setup. Write $A_i$ for the arrival
-time of transaction $i$'s label. The calibration set at time $t$ is
-$\mathcal{C}_t = \{ i < t : A_i \le t \}$, and $A_i$ depends on $a_i$, which the
-policy chose. So $\mathcal{C}_t$ is not a sample of the past. It is the past, filtered
-through the policy's own decisions, and the filter is tightest exactly where the
-guarantee needs data.
+The filtration is where this departs from the usual setup. Write $Y_i$ for the latent
+fraud state, $A_i$ for the label-arrival time, and $\widetilde{Y}_i$ for what the
+ledger finally records, which is not always $Y_i$. A reviewed item returns
+$\widetilde{Y}_i = Y_i$ within hours. A held item returns nothing, ever. On the
+release path a fraud surfaces with probability $p_d(x_i)$, a legitimate payment never
+surfaces, and whatever has not surfaced by the 180-day close is booked clean. Writing
+$D_i \sim \mathrm{Bern}(p_d(x_i))$ for that disclosure draw, independent of $Y_i$
+given $x_i$,
+\begin{equation}
+\label{eq:obs}
+\widetilde{Y}_i = Y_i D_i \qquad \text{on the release path.}
+\end{equation}
+An undisclosed fraud is therefore not a missing row. It is a row recorded as good. The
+calibration set at time $t$ is $\mathcal{C}_t = \{ i < t : A_i \le t \}$, and $A_i$ and
+$\widetilde{Y}_i$ both depend on $a_i$, which the policy chose. So $\mathcal{C}_t$ is
+not a sample of the past. It is the past, filtered through the policy's own decisions,
+and the filter is tightest exactly where the estimate is needed.
 
 \section{Method}
 \label{sec:method}
 
 \subsection{Arrival model}
 
-Three channels, one per action. A reviewed item is adjudicated after
-$\mathrm{Gamma}(2, 0.4)$ days and its label is the truth. A released item discloses
-with probability $p_d(x)$, and if it does the label arrives after
-$\min(\mathrm{Gamma}(2, 30), 180)$ days; if it does not, the ledger closes the item at
-180 days and books it clean whatever it really was. That second half matters more than
-the delay. An undisclosed fraud is not a missing row in an accounts-payable ledger, it
-is a row marked good, and any estimator that treats absence as missingness will read
-the wrong sign off it. A held item is never labelled.
+Three channels, one per action, all Gamma laws in shape-scale form and all times in
+days. A reviewed item is adjudicated after $\mathrm{Gamma}(2, 0.4)$ and its label is
+the truth. Only a fraud can surface on the release path: it does so with probability
+$p_d(x)$, after $\min(\mathrm{Gamma}(2, 30), 180)$, which is why
+\eqref{eq:obs} multiplies rather than merely delays. A legitimate release generates no
+event at all and is booked clean at the 180-day close, as is any fraud that never
+surfaced. That second half matters more than the delay, and an estimator that treats
+absence as missingness will read the wrong sign off it. A held item is never
+labelled.
 
 \subsection{Inverse-arrival-propensity reweighting}
 
-Let $\pi_i$ be the probability that transaction $i$'s label has arrived by the current
-time. On the review path $\pi_i$ is known by construction, because the policy chose the
-review and the SLA is an operational fact. On the release path
-$\pi_i = p_d(x_i)\,F_G(t - t_i)$ with $F_G$ the disclosure delay law, and $p_d$ has to
-be estimated, which is where the modelling risk sits. Each calibration item enters the
-risk estimate with weight $\rho^{\,t - t_i} / \pi_i$, geometric decay over a window
-capped in both days and count. Items with $\pi_i$ below a floor are dropped from
-numerator and denominator alike rather than clipped. A decision taken nine days ago has
-had almost no chance to report, its inverse propensity is enormous, and nearly all of
-what it contributes is variance.
+Let $\pi_i$ be the probability that $i$ has produced an informative label by now. On
+the review path it is known by construction, since the policy chose the review and the
+SLA is an operational fact. On the release path $\pi_i = p_d(x_i)F_G(t - t_i)$ with
+$F_G$ the disclosure delay law, and $p_d$ must be estimated, which is where the
+modelling risk sits. On that path $p_d$ is not known and is fitted online by ridge logistic regression on
+the standardised invoice amount and the frozen score, using only rows whose 180-day
+window has already closed, so the correction is itself lagged. The estimate on a score
+grid is
+\begin{equation}
+\label{eq:est}
+\widehat{R}_t(\tau) =
+\frac{\sum_{i \in \mathcal{C}_t} w_i\,\widetilde{Y}_i\,\pi_i^{-1}\,
+      \mathbf{1}\{s_i \le \tau\}}
+     {\sum_{i \in \mathcal{C}_t} w_i\,\mathbf{1}\{s_i \le \tau\}},
+\end{equation}
+with $w_i = \rho^{\,t-t_i}\mathbf{1}\{\pi_i \ge \pi_0\}$ over a window capped in both
+days and count.
+The propensity enters the numerator alone, inflating each surfaced fraud to stand for
+those still inside the reconciliation window. Two consequences follow. Trimming at
+$\pi_0$ drops items from numerator and denominator alike, so \eqref{eq:est} targets
+the overlap population $\{\pi_i \ge \pi_0\}$, and the decay makes it exponentially
+weighted rather than the trailing-window mean of Section~\ref{sec:prob}. Both gaps are
+measured, not bounded.
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[
+\begin{tikzpicture}[scale=0.94, transform shape,
   font=\scriptsize, >={Stealth[length=1.5mm]},
   box/.style={draw, rounded corners=1pt, align=center, inner sep=2.2pt,
               minimum height=5.2mm},
@@ -340,37 +366,33 @@ dependence the rest of this paper is about; the dashed edge carries nothing, eve
 
 \subsection{Update, budget projection, infeasibility}
 
-The recursion is the Gibbs--Cand\`es one, driven by the lagged and reweighted label
-stream,
+The recursion is the Gibbs--Cand\`es one, driven by the lagged, reweighted stream,
 \begin{equation}
 \alpha_{t+1} = \alpha_t + \gamma\,(\alpha - \mathrm{err}_t),
 \end{equation}
-with $\tau_{\mathrm{lo}}$ read off the reweighted risk curve, either as a quantile
-(M3) or through a conformal-risk-control threshold search over the same window (M4,
-M5). A candidate threshold counts only if at least $200$ units of calibration weight
-sit at or below it. Certifying a one-in-a-hundred risk from a dozen observations is
-not conservatism, it is small arithmetic.
+with $\tau_{\mathrm{lo}}$ read off the reweighted curve, as a quantile (M3) or through
+a conformal-risk-control threshold search over the same window (M4, M5). A candidate
+counts only if at least $200$ units of calibration weight sit at or below it, since
+certifying a one-in-a-hundred risk from a dozen observations is small arithmetic
+rather than conservatism.
 
 Capacity is enforced separately. Given $\tau_{\mathrm{lo}}$, the upper threshold
-$\tau_{\mathrm{hi}}$ is placed by an online quantile so the band carries exactly
-$b(1-\varepsilon)$ of traffic, which decouples the risk constraint from the capacity
-constraint and stops the two fighting over one knob. When no admissible
-$\tau_{\mathrm{lo}}$ meets $\alpha$ within the available capacity, the policy widens
-the band as far as $b$ allows and then raises a \emph{budget-infeasible} flag for that
-window. It does not quietly miss the target and report success. That flag is a
-deliverable of the method, not an error condition, and Section~\ref{sec:results}
-reports how often it fires.
+$\tau_{\mathrm{hi}}$ is placed by an online quantile so the band carries
+$b(1-\varepsilon)$ of traffic, which stops the risk and capacity constraints fighting
+over one knob, and a final projection caps the served load at $b$. When no admissible
+$\tau_{\mathrm{lo}}$ meets $\alpha$ within that capacity, the policy widens the band
+as far as $b$ allows and raises a \emph{budget-infeasible} flag. It does not quietly
+miss the target and report success.
 
 \subsection{Exploration}
 
 A fraction $\varepsilon$ of review capacity is spent on transactions drawn uniformly
-at random from below $\tau_{\mathrm{lo}}$, independent of score. These are items the
-policy is already confident about. Spending analyst time on them looks like waste on
-any dashboard an operations manager reads, and that is precisely why it gets cut first
-in production, which is the practical failure this paper is trying to name. Their
-labels are the only ones drawn from the auto-allow region with a known probability, so
-they are the only ones that can test the extrapolation the estimator would otherwise
-be making.
+at random from below $\tau_{\mathrm{lo}}$, independent of score, which leaves
+$R(\tau_{\mathrm{lo}})$ intact as the released region's risk. These are items the
+policy is already confident about, so the spend looks like waste on any dashboard an
+operations manager reads, and that is why it gets cut first in production. Their
+labels are the only ones drawn from the release region at a known probability, so they
+alone can test the extrapolation the estimator would otherwise make.
 
 \subsection{When are the target and the budget compatible?}
 
@@ -383,27 +405,33 @@ $b(1-\varepsilon)$.
 
 \begin{proposition}[Feasibility]
 \label{prop:feas}
-Under \emph{(A1)--(A3)}, write $q = 1 - \beta - b(1-\varepsilon)$. The pair
+Under \emph{(A1)--(A3)}, with $0 \le \varepsilon \le 1$ and
+$0 < b(1-\varepsilon) < 1-\beta$ so that $q := 1 - \beta - b(1-\varepsilon)$ lies in
+$(0,1)$ and the release region is non-empty, the pair
 $(\alpha, b)$ is jointly attainable if and only if
-$R\!\left(F^{-1}(q)\right) \le \alpha$; equivalently
+$R\!\left(F^{-1}(q)\right) \le \alpha$, equivalently
 $\alpha \ge \alpha_{\min}(b) := R(F^{-1}(1 - \beta - b(1-\varepsilon)))$, and
 $\alpha_{\min}$ is non-increasing in $b$.
 \end{proposition}
 
 \begin{proof}
-Under (A3) the held mass is $1 - F(\tau_{\mathrm{lo}}) - b(1-\varepsilon)$, so the cap
-$\beta$ forces $F(\tau_{\mathrm{lo}}) \ge q$. Under (A2) the map $R$ is
-non-decreasing: for $\tau_1 < \tau_2$, $R(\tau_2)$ is a convex combination of
-$R(\tau_1)$ and $\mathbb{E}[y \mid \tau_1 < s \le \tau_2]$, and the second term is at
-least $r(\tau_1) \ge R(\tau_1)$. The smallest admissible allow set is therefore the
-one at $F^{-1}(q)$, and it is feasible exactly when its risk clears $\alpha$.
-Monotonicity in $b$ follows because $q$ decreases as $b$ grows.
+Under (A3) the held mass is $1 - F(\tau_{\mathrm{lo}}) - b(1-\varepsilon)$, so $\beta$
+forces $F(\tau_{\mathrm{lo}}) \ge q$. Under (A2) $R$ is non-decreasing: for $\tau_1 <
+\tau_2$, $R(\tau_2)$ is a convex combination of $R(\tau_1)$ and $\mathbb{E}[y \mid
+\tau_1 < s \le \tau_2]$, whose second term is at least $r(\tau_1) \ge R(\tau_1)$. The
+smallest admissible release set is the one at $F^{-1}(q)$, feasible exactly when its
+risk clears $\alpha$. Monotonicity in $b$ follows since $q$ decreases as $b$ grows.
 \end{proof}
 
-Drop (A2) and the ``only if'' survives while the ``if'' does not, because the optimal
-release set need no longer be an interval in the score. The implementation raises its
-flag on the \emph{estimated} $R$, so the guarantee is worth exactly what the estimator
-is worth, which is what the next proposition is about.
+Drop (A2) and the condition stays sufficient, since $\tau_{\mathrm{lo}} = F^{-1}(q)$
+is admissible whenever its risk clears $\alpha$. What it loses is necessity: with a
+non-monotone $r$ a larger threshold can carry lower cumulative risk, so a pair can be
+attainable while the condition reads false. An earlier version of this paper had that
+implication the wrong way round. The statement is also pointwise in the score law,
+and under drift $F$ and $r$ move, so $\alpha_{\min}$ is a property of the current
+regime rather than of the stream, and the implementation evaluates it per window on
+the
+\emph{estimated} $R$, which makes the flag worth exactly what the estimator is worth.
 
 \begin{proposition}[Identification]
 \label{prop:ident}
@@ -415,63 +443,38 @@ pair and induces the same observable law. Only the product is identified from th
 ledger channel.
 \end{proposition}
 
-The review band identifies $r$ on $(\tau_{\mathrm{lo}}, \tau_{\mathrm{hi}}]$, which is
-disjoint from the release region, so it constrains $r$ there only through a
-functional-form assumption. An exploration sample drawn from below
-$\tau_{\mathrm{lo}}$ with known probability identifies $r$ directly, and
-$p_d = \Pr(Z{=}1 \mid x)/r(x)$ follows. The honest reading is therefore weaker than
-the one we set out to prove. At $\varepsilon = 0$ the release-path risk is not
-unidentified; it is identified only through an extrapolation that no data in the
-release region can test.
+The review band identifies $r$ on $(\tau_{\mathrm{lo}}, \tau_{\mathrm{hi}}]$, disjoint
+from the release region, so it constrains $r$ there only through a functional-form
+assumption. An exploration sample drawn from below $\tau_{\mathrm{lo}}$ at a known
+probability identifies $r$ directly, and $p_d$ follows. The honest reading is weaker
+than the one we set out to prove: at $\varepsilon = 0$ release-path risk is not
+nonparametrically identified, and point identification rests on an extrapolation no
+data in that region can test.
 
 We then asked how much exploration a rate guarantee needs. Bernstein's inequality on
-the exploration sample, with $R \approx \alpha$, gives
-$|\hat{R} - R| \le \eta\alpha$ with probability $1-\delta$ once
-$n_{\exp} \ge 2\left[(1-\alpha) + \eta/3\right]\log(2/\delta) / (\eta^2 \alpha)$,
-and since
-$n_{\exp} \approx \varepsilon b L$ over a window of length $L$,
+the exploration sample, treating it as a fixed-window Bernoulli mean with $R \approx
+\alpha$, gives $|\hat{R} - R| \le \eta\alpha$ with probability $1-\delta$ once
+$n_{\exp} \ge 2[(1-\alpha) + \eta/3]\log(2/\delta)/(\eta^2 \alpha)$, and with $n_{\exp} \approx \varepsilon b L$ over a window of $L = 45000$,
 \begin{equation}
 \label{eq:eps}
 \varepsilon \;\ge\; \frac{2\left[(1-\alpha) + \eta/3\right]\log(2/\delta)}
 {\eta^{2}\,\alpha\,b\,L}.
 \end{equation}
-At the operating point of Section~\ref{sec:setup} this asks for
-$n_{\exp} \ge 786$, that is $\varepsilon \ge 0.873$, merely to pin the estimate within
-one target-width. Halve the tolerance and it demands 2748 explored items, an
-$\varepsilon$ of 3.05, three times the whole budget. The bound is vacuous here.
-We report the measured rate in its place and say so again in the results.
+At $\eta = 1$, $\delta = 0.0500$ this asks for $n_{\exp} \ge 786$, that is
+$\varepsilon \ge 0.873$, to pin the estimate within one target-width, and halving the tolerance demands 2748 items, an $\varepsilon$ of 3.05. The bound is vacuous, and it
+bounds a fixed window rather than the adaptive procedure. We report the measured curve
+instead.
 
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[font=\scriptsize, >={Stealth[length=1.6mm]}]
-\draw[->] (0,0) -- (8.1,0) node[right=-1pt] {$s$};
-\fill[cC!16] (0,0.06) rectangle (3.6,0.72);
-\fill[cB!22] (3.6,0.06) rectangle (5.7,0.72);
-\fill[cD!18] (5.7,0.06) rectangle (7.8,0.72);
-\draw (3.6,0.02) -- (3.6,0.78) node[above=-2pt] {$\tau_{\mathrm{lo}}$};
-\draw (5.7,0.02) -- (5.7,0.78) node[above=-2pt] {$\tau_{\mathrm{hi}}$};
-\node at (1.8,0.53) {\textsf{allow}};
-\node at (4.65,0.42) {\textsf{review}};
-\node at (6.75,0.42) {\textsf{hold}};
-\foreach \x in {0.3,0.85,1.4,2.05,2.6,3.15}{\fill[cB!85!black] (\x,0.20) circle (0.62mm);}
-\draw[decorate, decoration={brace, amplitude=3pt, mirror}] (0,-0.05) -- (3.6,-0.05)
-  node[midway, below=2pt, align=center] {$\varepsilon b$ sampled at random\\from here};
-\draw[decorate, decoration={brace, amplitude=3pt, mirror}] (3.6,-0.05) -- (5.7,-0.05)
-  node[midway, below=2pt] {$b(1-\varepsilon)$};
-\end{tikzpicture}
-\caption{The band on the score axis. Capacity $b$ splits into the review band and an
-exploration carve-out (dots) drawn uniformly from the release region, which is the
-only channel that observes the release path at a known propensity.}
-\label{fig:band}
-\end{figure}
+%% Fig. 2 (score-axis band) cut under the Sec. VI-F order to fund the
+%% observed-data model, the estimator and the hyperparameter table.
+
 
 \subsection{Audit protocol}
 
-Every window emits four numbers: the reweighted risk estimate, the realised risk over
-matured labels, the review demand against $b$, and the infeasibility flag. The ratio
-of the last two pairs is what an auditor should read. A policy whose estimate is flat
-while its realised risk climbs is not stable, it is blind, and no detector watching
-only the score distribution will say so.
+Every window emits four numbers: the reweighted estimate, the realised risk over
+matured labels, review demand against $b$, and the flag. A policy whose estimate is
+flat while its realised risk climbs is not stable, it is blind, and no detector
+watching only the score distribution will say so.
 
 \begin{algorithm}[t]
 \caption{Budgeted conformal decisioning with exploration}
@@ -484,15 +487,13 @@ step $\gamma$, exploration share $\varepsilon$
   \STATE $s_t \leftarrow s(x_t)$
   \STATE admit to $\mathcal{C}$ every label with $A_i \le t$ \COMMENT{causal guard}
   \IF{$t \bmod m = 0$}
-    \STATE $w_i \leftarrow \rho^{\,t-t_i}/\pi_i$ for $i \in \mathcal{C}$, trimming
-      $\pi_i < \pi_0$
-    \STATE $\hat{R}(\cdot) \leftarrow$ weighted risk curve with support gate
+    \STATE $\hat{R}(\cdot) \leftarrow$ \eqref{eq:est} on $\mathcal{C}$, trimming
+      $\pi_i < \pi_0$, with support gate
     \STATE $\tau_{\mathrm{lo}} \leftarrow \max\{\tau : \hat{R}(\tau) \le \alpha_t\}$
     \IF{no such $\tau$ within $\beta$}
       \STATE widen to the cap and raise \textsf{infeasible}
     \ENDIF
-    \STATE $\tau_{\mathrm{hi}} \leftarrow$ online quantile giving band mass
-      $b(1-\varepsilon)$
+    \STATE $\tau_{\mathrm{hi}} \leftarrow$ quantile giving band mass $b(1-\varepsilon)$
     \STATE $\alpha_{t+1} \leftarrow \alpha_t + \gamma(\alpha - \mathrm{err}_t)$
   \ENDIF
   \STATE $a_t \leftarrow$ action from $(s_t, \tau_{\mathrm{lo}}, \tau_{\mathrm{hi}})$
@@ -507,50 +508,56 @@ step $\gamma$, exploration share $\varepsilon$
 \section{Experimental Setup}
 \label{sec:setup}
 
-The primary stream is SynB2B-Fraud~\cite{synb2b}, a published benchmark of 100,000
-buyer-to-supplier invoices over 561.34 days with five fraud topologies. Its statistics
-were re-derived from the CSV rather than copied from the datasheet: 1,500 fraudulent
-rows, exactly 300 per topology, a median invoice of 3,492.66. Fraud is not spread
-evenly in time in that benchmark, and the first 20\% of rows by count carries 0.385\%
-fraud against 1.78\% over the rest, so a target calibrated on the training split would
-mean nothing. Targets are stipulated instead, at $\alpha = 0.0124$ here and
-$\alpha = 0.000930$ on the card stream, chosen to be reachable in the quiet regime and
-out of reach during two of the three drift events.
+The primary stream is SynB2B-Fraud~\cite{synb2b}, 100,000 buyer-to-supplier invoices
+over 561.34 days with five fraud topologies. Its statistics were re-derived from the
+CSV: 1,500 fraudulent rows, 300 per topology, median invoice 3,492.66. Fraud is not
+spread evenly in time, and the first 20\% of rows carries 0.385\% fraud against 1.78\%
+over the rest, so a target calibrated on the training split would mean nothing.
+Targets are stipulated instead, reachable in the quiet regime and out of reach during
+two of the three drift events.
 
 We add two annotation layers, released as SynB2B-Fraud-Stream. Drift enters as a
 second fraud channel layered on the generator's own labels, never as a relabelling, so
 all 1,500 published labels survive: a covariate shift in the log-amount law, a 60-day
 sign flip of the supplier-novelty coefficient, and a base-rate surge with a 9-day
-half-life. Magnitudes are solved against stated targets rather than picked by eye.
-Arrival follows Section~\ref{sec:method}'s channels with disclosure probabilities
-running from 0.86 for wire redirection down to 0.19 for payment-term manipulation,
-because a redirected wire generates a phone call and a manipulated payment term
-generates nothing.
+half-life, with magnitudes solved against stated targets rather than picked by eye.
+Disclosure probabilities run from 0.86 for wire redirection down to 0.19 for
+payment-term manipulation, because a redirected wire generates a phone call and a
+manipulated payment term generates nothing. The ULB rows keep their original order and
+are replayed on the same 561.34-day calendar, since 48 hours cannot carry a 180-day
+reconciliation horizon.
 
-The scorer is LightGBM, trained on the first 20\% in time order and then frozen, which
-isolates the calibration layer from model staleness. It reaches AUC-PR 0.2049 and
-AUC-ROC 0.7313 over the remaining 80\%. Relative AUC-PR over the ten days after each
-event falls by 0.7988 and 0.6805 for the covariate and concept shifts, and
-\emph{rises} by 0.3233 after the prior shift, since a larger positive class makes
-average precision easier. External validity comes from the ULB card
-portfolio~\cite{dalpozzolo2018}, replayed in its original row order on the same
-calendar. Cost constants are stipulated per stream and stated in the repository, and the
-claim made here is risk control, not cost optimality. Everything runs five seeds with
-10,000-resample percentile intervals, on an Apple M4 Pro. Code, the full results file
+The scorer is LightGBM, trained on the first 20\% in time order then frozen, which
+isolates the calibration layer from model staleness, and it reaches AUC-PR 0.2049 and AUC-
+ROC 0.7313 over the rest. Over the ten days after each event AUC-PR falls by a
+relative 0.7988 and 0.6805 for the covariate and concept shifts and \emph{rises} by
+0.3233 after the prior shift, since a larger positive class makes average precision
+easier. The second stream is the ULB card portfolio~\cite{dalpozzolo2018}. Cost constants are stipulated per stream and stated in the repository, and the
+claim made here is risk control, not cost optimality. The operating point is $\alpha = 0.0124$, $b = 0.0200$, $\beta = 0.0800$,
+$\varepsilon = 0.120$, $\rho = 0.9975$, $\gamma = 0.018$, propensity floor
+$\pi_0 = 0.0500$, a calibration window capped at 45000 items and 240 days, an update
+every 250 transactions, and a support gate of 200 weight units. Costs are USD per
+thousand transactions. Intervals are percentile bootstraps over the five seed-level
+replicates, which is the independent unit here; with five runs they are coarse and
+should be read as exploratory rather than as tight confidence statements. Everything
+runs on an Apple M4 Pro. Code, the full results file
 and the decision log are at
 \ifanon URL withheld for review\else \url{https://github.com/abhisheksharma2411/synb2b-fraud-stream}\fi.
 
 \begin{table}[t]
 \caption{Methods on SynB2B-Fraud-Stream, five seeds. FOR is the false-omission rate on
-released traffic. ``Infeas.'' is the share of windows raising the budget-infeasibility
-flag. ``Bias'' is the ratio of true to estimated risk over matured windows, where
-$1$ is unbiased and smaller means the estimator reads high.}
+released traffic. ``dem.'' is review demand before the capacity projection and
+``served'' is the analyst load after it, which is what the cap of $b=0.0200$ binds.
+``Infeas.'' is the share of windows raising the budget-infeasibility flag. ``ratio''
+is $\overline{R}_{\mathrm{true}}/\overline{R}_{\mathrm{est}}$, a quotient of two means
+over matured windows, where $1$ is calibrated and smaller means the estimator reads
+high. It is a calibration ratio, not a statistical bias.}
 \label{tab:methods}
 \centering\scriptsize
-\setlength{\tabcolsep}{1.9pt}
+\setlength{\tabcolsep}{1.0pt}
 \begin{tabular}{lrrrrrrr}
 \toprule
-Method & FOR & quiet & rev. & hold & Infeas. & cost/1k & Bias\\
+Method & FOR & quiet & dem. & served & Infeas. & USD/1k & ratio\\
 \midrule
 \TableMethodsBody
 \bottomrule
@@ -560,34 +567,32 @@ Method & FOR & quiet & rev. & hold & Infeas. & cost/1k & Bias\\
 \section{Results}
 \label{sec:results}
 
-Table~\ref{tab:methods} holds the comparison. M0 and M1 coincide exactly, to every
-digit, because the training split's risk curve lies wholly below the target and the
-finite-sample correction has nothing to bite on. A conformal quantile computed once on
-an unrepresentative split is not different from a threshold somebody eyeballed, which
-is worth saying out loud before any adaptive method is credited with beating it. Both
-leave quiet-regime risk at 0.017436 [0.017196, 0.017836], which overshoots
-$\alpha$ by 40.6\%. M5 lands at 0.012511 [0.012189, 0.012854], over target by 0.90\%.
+Table~\ref{tab:methods} holds the comparison. M0 and M1 coincide to every digit,
+because the training split's risk curve lies wholly below the target and the finite-
+sample correction has nothing to bite on: a conformal quantile computed once on an
+unrepresentative split is no different from a threshold somebody eyeballed. Both leave
+quiet-regime risk at 0.017436 [0.017196, 0.017836], overshooting $\alpha$ by 40.6\%.
+M5 lands at 0.012511 [0.012189, 0.012854], 0.90\% above target.
 
-The estimator numbers are the ones to read next. Over matured windows M4 recovers a
-ratio of truth to estimate of 0.0518, meaning it reads its own risk high by a factor
-of 19.3, and it does so while its realised risk tracks the target well enough to look
-healthy on a dashboard. M3 sits at 0.0844 and cost-sensitive M2 at 0.112. Adding
-inverse-arrival-propensity weights and exploration moves M5 to 0.881 [0.834, 0.929],
-an overstatement of 13.5\%, and handing the true disclosure propensity to the same
-policy gives 1.07, which brackets the remaining error as propensity-model error rather
-than anything structural. Fig.~\ref{fig:comp} shows why the correction is needed at
-all: by the end of the stream 0.9816 of calibration weight arrives through the ledger
-channel, 0.0158 through the review band and 0.0026 through exploration.
+The estimator numbers matter more. Over matured windows M4 reaches a truth-to-estimate
+ratio of 0.0518, reading its own risk high by a factor of 19.3, while its realised
+risk tracks the target well enough to look healthy on a dashboard. M3 sits at 0.0844,
+M2 at 0.112. Arrival-propensity weights and exploration move M5 to 0.881 [0.834,
+0.929], an overstatement of 13.5\%; the true propensity gives 1.07, bracketing the
+rest as propensity-model error. Realised risk does not follow. M5 sits at 0.02064 against M4's 0.02016 overall
+and 0.012511 against 0.012344 in the quiet regime, both marginally worse and both a
+little above the 0.0124 target rather than under it. What the correction buys is an
+estimate an auditor can act on, not less fraud, and a paper that claimed otherwise
+would be misreading its own table. Fig.~\ref{fig:comp} shows why: by the stream's end 0.9816 of calibration weight
+arrives through the ledger, 0.0158 through the review band and 0.0026 through
+exploration.
 
-Capacity holds. M5 draws review demand of 0.02269 against a budget of 0.0200, a mean
-overshoot of 0.002787, with 0.44 of windows above budget before projection and a
-served rate of 0.01806 after it. Cost per thousand transactions is 172993 for M5
-against 161420 for M2, so the proposed method is the most expensive of the adaptive
-ones. It buys an estimator that can be believed, not a cheaper queue. Fraud value
-released is 18,483,140 [18,189,283, 18,776,997] of 30,002,619 total, against
-24,417,614 under the static rule. The calibration update costs 18.36 [17.99, 18.59]
-microseconds at p50 and 26.44 [25.47, 27.34] at p99 per transaction, amortised over
-batches of 250, which puts it far below the network hop it rides on.
+Capacity holds, but only after projection. M5's demand averages 0.022695 against the
+budget of 0.0200 and exceeds it in 0.44 of windows, while the served load is 0.01806. Cost
+is 172993 against 161420 for M2, so the proposed method is the most expensive adaptive
+one. It buys an estimate that can be believed, not a cheaper queue. Fraud value
+released is 18,483,140 [18,189,283, 18,776,997] of 30,002,619, against 24,417,614
+under the static rule. The update costs 18.36 microseconds at p50 and 26.44 at p99.
 
 \begin{figure}[t]
 \centering
@@ -613,26 +618,9 @@ $\alpha$ after the concept shift; only the spike height differs.}
 \label{fig:series}
 \end{figure}
 
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}
-\begin{axis}[tinyplot, xlabel={review budget $b$}, ylabel={realised FOR},
-  xmin=0.006, xmax=0.047, ymin=0.0108, ymax=0.0222,
-  legend style={at={(0.98,0.55)}, anchor=east}, legend cell align=left]
-\addplot[cA!25, fill=cA!18, draw=none, forget plot] coordinates {\BudgetBand} \closedcycle;
-\addplot[cA, thick, mark=*, mark size=1pt] coordinates {\BudgetCurve};
-\addlegendentry{quiet regime}
-\addplot[cD, mark=square*, mark size=1pt] coordinates {\BudgetOverall};
-\addlegendentry{whole stream}
-\addplot[black, dashed, line width=0.5pt] coordinates {(0.006,\AlphaSynb) (0.047,\AlphaSynb)};
-\addlegendentry{$\alpha$}
-\end{axis}
-\end{tikzpicture}
-\caption{Capacity against realised risk for M5, with a bootstrap band on the quiet
-regime. Buying analysts helps, and it helps sublinearly. Six times the budget moves
-quiet-regime risk by less than a fifth.}
-\label{fig:budget}
-\end{figure}
+%% Fig. 4 (budget-risk curve) cut for space; Table I carries per-method
+%% capacity and the budget ablation is in the artefact.
+
 
 \begin{figure}[t]
 \centering
@@ -674,104 +662,99 @@ Table~\ref{tab:eps} carries the exploration ablation, and it is the one that spe
 Proposition~\ref{prop:ident}. Bias climbs monotonically with $\varepsilon$ over most
 of the range, from 0.871 at no exploration to 0.937 at 0.400 and 0.970 at 0.600,
 while quiet-regime risk drifts up from 0.01237 to 0.01309 as capacity moves out of the
-band. So the estimator does improve with exploration, steadily, at a rate the bound in
-\eqref{eq:eps} never comes close to describing: at 0.400 that bound is still
-unsatisfied by a wide margin while the estimator sits within 0.063 of unbiased.
-Conservative bounds are conservative. Neither proposition was rewritten to
+band. The trend is real, the step at the operating point is not: 0.871 [0.823, 0.917] at no
+exploration against 0.881 [0.834, 0.929] at 0.120 is a gain of 0.010 with intervals
+that overlap almost entirely, so most of the distance from M4's 0.0518 comes from the
+propensity correction. Exploration supplies the identification and, at this budget,
+little else. The 0.120 was fixed as an operating assumption before the ablation ran. Neither proposition was rewritten to
 match a measurement, and the gap is stated rather than closed.
 
-One ablation came out backwards, and it is the most useful thing in the study. Set the
-delay multiplier to 0 so every label arrives the instant the decision is taken, and the
-infeasibility flag fires in 1.0000 of windows, against 0.341 at the true delay, while
-realised risk improves to 0.019487. That is not perfect feedback, because the
-undisclosed frauds are still booked clean at the ledger close; it is the delay alone,
-removed. And removing it made the policy louder, not calmer. The lag was never
-protecting anything, it was concealing the fact that the
-target could not be met at this capacity, and the delayed estimator was quiet because
-it was wrong. Raising disclosure has a related effect. At a multiplier of 2.4, so that
-released frauds surface far more often, the corrected estimator's bias ratio degrades
-from 0.881 to 0.669 while infeasibility climbs to 0.846, because more disclosure
-sharpens the ledger channel without touching the censoring that sits underneath it.
+One ablation came out backwards. Set the delay multiplier to 0 so every label arrives
+the instant the decision is taken, and the flag fires in 1.0000 of windows against
+0.341 at the true delay, while realised risk improves to 0.019487. That is not perfect
+feedback: undisclosed frauds are still booked clean at the close, so this removes the
+delay alone. And removing it made the policy louder, not calmer. The lag was
+concealing that the target could not be met at this capacity, and the delayed
+estimator was quiet because it was wrong. Raising disclosure has a related effect. At a multiplier of 2.4 the corrected ratio
+degrades from 0.881 to 0.669 while
+infeasibility climbs to 0.846, because more disclosure sharpens the ledger channel
+without touching the censoring underneath.
 
-Misses split by topology exactly as disclosure does. Wire redirection surfaces 0.86 of
-the time and is missed at 0.0902 [0.0640, 0.1286]. Payment-term manipulation surfaces
-at 0.19 and is missed at 0.649. Shell-supplier rings sit at 0.870 and drift-induced
-fraud at 0.948, so the policy is blindest precisely where the ledger is quietest, and a
-reader who cares about invoice fraud rather than about conformal prediction should take
-that as the operational finding. Recovery is uneven too: 18.32 days after the covariate
+Misses split by topology as disclosure does: wire redirection surfaces 0.86 of the
+time and is missed at 0.0902 [0.0640, 0.1286], payment-term manipulation surfaces at
+0.19 and is missed at 0.649, and drift-induced fraud is missed at 0.948. The policy is
+blindest where the ledger is quietest. Recovery takes 18.32 days after the covariate
 shift for every method, and after the concept and prior events realised risk never
-returns to target before the stream ends. Recovery never came.
+returns to target.
 
 \begin{table}[t]
-\caption{External validity on the ULB card portfolio, $\alpha = 0.000930$. Columns
-match Table~\ref{tab:methods}.}
+\caption{Cross-dataset transfer to the ULB card portfolio, $\alpha = 0.000930$.
+Columns match Table~\ref{tab:methods}. The disclosure and delay layers are imposed by
+us there too, so this tests portability across score and label distributions, not
+across a real label-arrival system.}
 \label{tab:ulb}
 \centering\scriptsize
-\setlength{\tabcolsep}{1.1pt}
+\setlength{\tabcolsep}{0.8pt}
 \begin{tabular}{lrrrrrrr}
 \toprule
-Method & FOR & quiet & rev. & hold & Infeas. & cost/1k & Bias\\
+Method & FOR & quiet & dem. & served & Infeas. & USD/1k & ratio\\
 \midrule
 \TableUlbBody
 \bottomrule
 \end{tabular}
 \end{table}
 
-The card portfolio in Table~\ref{tab:ulb} reproduces the shape on a much rarer
-positive class, and it also shows a limit. M5 holds quiet-regime risk at 0.000300 against a
-target of 0.000930 and reaches a bias ratio of 0.944, but M4 without any correction
-already sits at 0.883. The oracle variant overshoots to 1.27 here, further from
-unbiased than either, so the bracketing that held on the invoice stream does not
-survive a nearly flat propensity. Disclosure there depends on amount alone, since the portfolio
-carries no topology annotation, so the propensity is nearly flat and there is little
-for the correction to undo. The method earns its keep where the disclosure law varies
-across the population. Where it does not vary, it costs microseconds and buys almost
-nothing: 20.24 at p50 rather than 9.67.
+Table~\ref{tab:ulb} reproduces the shape on a much rarer positive class and also shows
+a limit. M5 reaches a ratio of 0.944 where M4 without any correction already sits at
+0.883, and the oracle overshoots to 1.27, further from calibrated than either. That
+portfolio carries no topology annotation and disclosure depends on amount alone, so
+the propensity is nearly flat and little is left for the correction to undo. The
+method earns its keep where the disclosure law varies across the population. Where it
+does not, it costs 20.24 microseconds at p50 rather than 9.67 and buys almost nothing.
 
 \section{Discussion and Threats to Validity}
 
 The infeasibility rate is a result, not a defect. M5 declares 0.341 of windows
-infeasible, M2 declares 0.924, and M0 declares none while missing the target by more
-than any of them. A policy that never reports infeasibility under a capacity
-constraint and a drifting stream is not succeeding; it is not looking. Operations
-teams should demand that number on the same screen as the risk estimate.
+infeasible, M2 0.924, and M0 none while missing the target by more than either. A
+policy that never reports infeasibility under a capacity constraint and a drifting
+stream is not succeeding, it is not looking. We report how often the flag fires but
+have not validated it against oracle feasibility, so it stays a diagnostic, not a
+verified detector.
 
-Practitioners treat label lag as an engineering nuisance to be absorbed by a longer
-window. That reading is wrong. A longer window admits more matured labels and more
-censored ones in the same motion, and the censored ones are not noise, they carry a
-sign.
+Practitioners treat label lag as a nuisance to be absorbed by a longer window. That
+reading is wrong. A longer window admits more matured labels and more censored ones in
+the same motion, and the censored ones carry a sign.
 
-The limits below deserve to be stated plainly rather than softened. The drift in this
-study was injected by us, with magnitudes we solved against targets we chose, so every
-recovery-time number here describes our generator and not any real payment network,
-and bootstrap intervals do nothing about that. The cost constants are stipulated,
-which is why the cost column is reported and never argued from. And the propositions
-lean on assumptions (A1)--(A3), of which the monotone-conditional-rate assumption is
-the one a real portfolio breaks first, whenever a topology concentrates at mid score.
+The limits below deserve to be stated plainly rather than softened. The drift was
+injected by us, with magnitudes solved against targets we chose, so every recovery-
+time number describes our generator and not any real payment network. The cost
+constants are stipulated, which is why the cost column is reported and never argued
+from. The propositions lean on (A1)--(A3), of which monotonicity is the one a real
+portfolio breaks first. And \eqref{eq:est} estimates an exponentially weighted risk on
+the trimmed overlap population, not the trailing-window risk of
+Section~\ref{sec:prob}, and we measure that gap rather than bound it.
 
-What would break this in production is narrower than any of that: the disclosure model
-is fitted on the same censored ledger it is meant to correct, so if an operations team
-changes its write-off policy or its wire recall window, $p_d$ moves with no signal at
-all in the score distribution. The audit protocol catches that only after a full
-reconciliation horizon has elapsed. Six months is a long time to be wrong.
+What would break this in production is narrower: the disclosure model is fitted on the
+same censored ledger it is meant to correct, so if a team changes its write-off policy
+or its wire recall window, $p_d$ moves with no signal in the score distribution, and
+the audit catches it only after a full reconciliation horizon.
 
 \section{Conclusion}
 
-A budgeted fraud policy decides which labels it will ever receive, and that makes its
-own calibration set a function of its own actions. We gave a feasibility condition
-that says when a target and a budget can coexist, and an identification result that
-says what random exploration buys. The rate bound attached to it turned out vacuous at
-any operating point worth running, so the measured curve stands in for it. What holds
-up across two streams is narrower and more useful than a theorem: correcting for
-arrival propensity moves an estimator that reads high by a factor of 19.3 to one that
-reads high by 13.5\%, and paying for that correction costs 0.120 of the analyst
-budget and roughly nine microseconds per transaction.
+A budgeted fraud policy decides which labels it will ever receive, which makes its
+calibration set a function of its own actions. We gave a feasibility condition for
+when a target and a budget can coexist, and an identification result for what random
+exploration buys. The attached rate bound is vacuous at any operating point worth
+running, so the measured curve stands in for it. What holds across two streams is
+narrower than a theorem. Correcting for arrival propensity moves an estimator that
+reads high by a factor of 19.3 to one that reads high by 13.5\%, for 0.120 of the
+analyst budget and about nine microseconds per transaction. Realised risk is
+unchanged, so the claim is a policy that can be audited, not one that is safer.
 
 \ifanon
 \else
 \section*{Acknowledgment}
-The SynB2B-Fraud benchmark, and the drift and arrival layers derived from it here, are
-openly licensed for reuse.
+The SynB2B-Fraud benchmark and the layers derived from it are openly licensed.
 \fi
 
 \begin{thebibliography}{99}
@@ -827,6 +810,10 @@ Y. Geifman and R. El-Yaniv, ``Selective classification for deep neural networks,
 Y. Geifman and R. El-Yaniv, ``SelectiveNet: A deep neural network with an integrated
 reject option,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, Long Beach, CA, USA,
 2019, pp. 2151--2159.
+
+\bibitem{xu2024active}
+Z. Xu, N. Karampatziakis, and P. Mineiro, ``Active, anytime-valid risk controlling
+prediction sets,'' arXiv:2406.10490, Jun. 2024.
 
 \bibitem{mozannar2020}
 H. Mozannar and D. Sontag, ``Consistent estimators for learning to defer to an
