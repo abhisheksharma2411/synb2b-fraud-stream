@@ -1,0 +1,370 @@
+{
+  "angelopoulos2023pid": {
+    "arxiv": "2307.16895",
+    "authors": [
+      "Anastasios N. Angelopoulos",
+      "Emmanuel J. Candes",
+      "Ryan J. Tibshirani"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2307.16895v1",
+    "published": "2023-07-31T17:59:16Z",
+    "status": "OK",
+    "title": "Conformal PID Control for Time Series Prediction",
+    "updated": "2023-07-31T17:59:16Z"
+  },
+  "angelopoulos2024crc": {
+    "arxiv": "2208.02814",
+    "authors": [
+      "Anastasios N. Angelopoulos",
+      "Stephen Bates",
+      "Adam Fisch",
+      "Lihua Lei",
+      "Tal Schuster"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2208.02814v4",
+    "published": "2022-08-04T17:59:44Z",
+    "status": "OK",
+    "title": "Conformal Risk Control",
+    "updated": "2025-06-13T18:38:23Z"
+  },
+  "anytime2026": {
+    "arxiv": "2602.04364",
+    "authors": [
+      "Bror Hultberg",
+      "Dave Zachariah",
+      "Ant\u00f4nio H. Ribeiro"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2602.04364v1",
+    "published": "2026-02-04T09:39:36Z",
+    "status": "OK",
+    "title": "Anytime-Valid Conformal Risk Control",
+    "updated": "2026-02-04T09:39:36Z"
+  },
+  "audited2026": {
+    "arxiv": "2606.14909",
+    "authors": [
+      "Yanfei Zhou",
+      "Rizal Fathony",
+      "Nam H. Nguyen",
+      "Matteo Sesia"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2606.14909v1",
+    "published": "2026-06-12T19:28:40Z",
+    "status": "OK",
+    "title": "Audited Conformal Prediction for Classification under Unknown Distribution Shift",
+    "updated": "2026-06-12T19:28:40Z"
+  },
+  "barber2023beyond": {
+    "arxiv": "2202.13415",
+    "authors": [
+      "Rina Foygel Barber",
+      "Emmanuel J. Candes",
+      "Aaditya Ramdas",
+      "Ryan J. Tibshirani"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2202.13415v5",
+    "published": "2022-02-27T18:18:43Z",
+    "status": "OK",
+    "title": "Conformal prediction beyond exchangeability",
+    "updated": "2023-03-17T01:33:59Z"
+  },
+  "bates2021rcps": {
+    "arxiv": "2101.02703",
+    "authors": [
+      "Stephen Bates",
+      "Anastasios Angelopoulos",
+      "Lihua Lei",
+      "Jitendra Malik",
+      "Michael I. Jordan"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2101.02703v3",
+    "published": "2021-01-07T18:59:33Z",
+    "status": "OK",
+    "title": "Distribution-Free, Risk-Controlling Prediction Sets",
+    "updated": "2021-08-04T19:41:27Z"
+  },
+  "causal2026": {
+    "arxiv": "2605.29272",
+    "authors": [
+      "Gaurav Dhama"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2605.29272v1",
+    "published": "2026-05-28T02:43:34Z",
+    "status": "OK",
+    "title": "Causal Label Recovery in Payment Networks",
+    "updated": "2026-05-28T02:43:34Z"
+  },
+  "corrupted2026": {
+    "arxiv": "2605.20515",
+    "authors": [
+      "Bowen Wang",
+      "Matteo Zecchin",
+      "Osvaldo Simeone"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2605.20515v1",
+    "published": "2026-05-19T21:34:37Z",
+    "status": "OK",
+    "title": "Online Conformal Prediction with Corrupted Feedback",
+    "updated": "2026-05-19T21:34:37Z"
+  },
+  "costsensitive2026": {
+    "arxiv": "2607.27143",
+    "authors": [
+      "Manpreet Singh",
+      "Akshatha Srikantha",
+      "Shyamal Lakhanpal"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2607.27143v1",
+    "published": "2026-07-29T17:15:33Z",
+    "status": "OK",
+    "title": "Cost-Sensitive Conformal Prediction and Human-in-the-Loop Abstention for Imbalanced High-Stakes Decision Support: A Multi-Domain Benchmark",
+    "updated": "2026-07-29T17:15:33Z"
+  },
+  "dalpozzolo2014": {
+    "authors": [
+      "Andrea Dal Pozzolo",
+      "Olivier Caelen",
+      "Yann-A\u00ebl Le Borgne",
+      "Serge Waterschoot",
+      "Gianluca Bontempi"
+    ],
+    "container": "Expert Systems with Applications",
+    "doi": "10.1016/j.eswa.2014.02.026",
+    "issue": "10",
+    "page": "4915-4928",
+    "status": "OK",
+    "title": "Learned lessons in credit card fraud detection from a practitioner perspective",
+    "type": "journal-article",
+    "volume": "41",
+    "year": 2014
+  },
+  "dalpozzolo2018": {
+    "authors": [
+      "Andrea Dal Pozzolo",
+      "Giacomo Boracchi",
+      "Olivier Caelen",
+      "Cesare Alippi",
+      "Gianluca Bontempi"
+    ],
+    "container": "IEEE Transactions on Neural Networks and Learning Systems",
+    "doi": "10.1109/TNNLS.2017.2736643",
+    "issue": "8",
+    "page": "3784-3797",
+    "status": "OK",
+    "title": "Credit Card Fraud Detection: A Realistic Modeling and a Novel Learning Strategy",
+    "type": "journal-article",
+    "volume": "29",
+    "year": 2018
+  },
+  "deng2026authorize": {
+    "arxiv": "2608.08577",
+    "authors": [
+      "Jie Deng"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2608.08577v1",
+    "published": "2026-08-09T08:41:08Z",
+    "status": "OK",
+    "title": "When Can Fraud Operations Authorize Automation? A Decision-Support Framework for Fresh Audit Evidence and Review Workload",
+    "updated": "2026-08-09T08:41:08Z"
+  },
+  "feldman2022online": {
+    "arxiv": "2205.09095",
+    "authors": [
+      "Shai Feldman",
+      "Liran Ringel",
+      "Stephen Bates",
+      "Yaniv Romano"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2205.09095v7",
+    "published": "2022-05-18T17:41:37Z",
+    "status": "OK",
+    "title": "Achieving Risk Control in Online Learning Settings",
+    "updated": "2023-01-27T07:10:01Z"
+  },
+  "geifman2017selective": {
+    "arxiv": "1705.08500",
+    "authors": [
+      "Yonatan Geifman",
+      "Ran El-Yaniv"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/1705.08500v2",
+    "published": "2017-05-23T19:43:56Z",
+    "status": "OK",
+    "title": "Selective Classification for Deep Neural Networks",
+    "updated": "2017-06-01T14:10:34Z"
+  },
+  "geifman2019selectivenet": {
+    "arxiv": "1901.09192",
+    "authors": [
+      "Yonatan Geifman",
+      "Ran El-Yaniv"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/1901.09192v4",
+    "published": "2019-01-26T10:09:16Z",
+    "status": "OK",
+    "title": "SelectiveNet: A Deep Neural Network with an Integrated Reject Option",
+    "updated": "2019-06-26T18:55:09Z"
+  },
+  "gibbs2021aci": {
+    "arxiv": "2106.00170",
+    "authors": [
+      "Isaac Gibbs",
+      "Emmanuel Cand\u00e8s"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2106.00170v3",
+    "published": "2021-06-01T01:37:32Z",
+    "status": "OK",
+    "title": "Adaptive Conformal Inference Under Distribution Shift",
+    "updated": "2021-10-28T17:04:20Z"
+  },
+  "gibbs2024arbitrary": {
+    "arxiv": "2208.08401",
+    "authors": [
+      "Isaac Gibbs",
+      "Emmanuel Cand\u00e8s"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2208.08401v3",
+    "published": "2022-08-17T16:51:12Z",
+    "status": "OK",
+    "title": "Conformal Inference for Online Prediction with Arbitrary Distribution Shifts",
+    "updated": "2023-10-05T22:10:05Z"
+  },
+  "lakkaraju2017": {
+    "authors": [
+      "Himabindu Lakkaraju",
+      "Jon Kleinberg",
+      "Jure Leskovec",
+      "Jens Ludwig",
+      "Sendhil Mullainathan"
+    ],
+    "container": "Proceedings of the 23rd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+    "doi": "10.1145/3097983.3098066",
+    "issue": null,
+    "page": "275-284",
+    "status": "OK",
+    "title": "The Selective Labels Problem",
+    "type": "proceedings-article",
+    "volume": null,
+    "year": 2017
+  },
+  "limits2026": {
+    "arxiv": "2605.27557",
+    "authors": [
+      "Gaurav Dhama"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2605.27557v2",
+    "published": "2026-05-26T18:24:50Z",
+    "status": "OK",
+    "title": "The Fundamental Limits of Fraud Detection in Card Payment Networks",
+    "updated": "2026-05-29T11:21:17Z"
+  },
+  "mozannar2020defer": {
+    "arxiv": "2006.01862",
+    "authors": [
+      "Hussein Mozannar",
+      "David Sontag"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2006.01862v3",
+    "published": "2020-06-02T18:21:38Z",
+    "status": "OK",
+    "title": "Consistent Estimators for Learning to Defer to an Expert",
+    "updated": "2021-01-25T01:43:28Z"
+  },
+  "papadopoulos2002": {
+    "authors": [
+      "Harris Papadopoulos",
+      "Kostas Proedrou",
+      "Volodya Vovk",
+      "Alex Gammerman"
+    ],
+    "container": "Lecture Notes in Computer Science",
+    "doi": "10.1007/3-540-36755-1_29",
+    "issue": null,
+    "page": "345-356",
+    "status": "OK",
+    "title": "Inductive Confidence Machines for Regression",
+    "type": "book-chapter",
+    "volume": null,
+    "year": 2002
+  },
+  "shiftdetect2026": {
+    "arxiv": "2606.11949",
+    "authors": [
+      "Jun Wen Leong"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2606.11949v4",
+    "published": "2026-06-10T11:24:25Z",
+    "status": "OK",
+    "title": "Online Shift Detection and Conformal Adaptation for Deployed Safety Classifiers",
+    "updated": "2026-08-10T15:18:25Z"
+  },
+  "synb2b_dataset": {
+    "authors": [
+      "Sharma, Abhishek"
+    ],
+    "doi": "10.5281/zenodo.21668281",
+    "license": "cc-by-4.0",
+    "publication_date": "2026-07-29",
+    "resource_type": "dataset",
+    "status": "OK",
+    "title": "SynB2B-Fraud: A Synthetic Dataset for Fraud Detection in B2B Payment Networks",
+    "zenodo_record": "21668281"
+  },
+  "synb2b_preprint": {
+    "authors": [
+      "Sharma, Abhishek"
+    ],
+    "doi": "10.5281/zenodo.21670659",
+    "license": "cc-by-4.0",
+    "publication_date": "2026-07-29",
+    "resource_type": "publication",
+    "status": "OK",
+    "title": "SynB2B-Fraud: An Open Synthetic Benchmark for Fraud Detection in B2B Payment Networks",
+    "zenodo_record": "21670659"
+  },
+  "vovk2005": {
+    "authors": [
+      "Vovk",
+      "Gammerman",
+      "Shafer"
+    ],
+    "isbn": "978-0-387-00152-4",
+    "status": "MANUAL",
+    "title": "Algorithmic Learning in a Random World",
+    "venue": "Springer",
+    "verified_by": "manual: Springer monograph, ISBN checked against the publisher page",
+    "year": 2005
+  },
+  "xu2026selectivecrc": {
+    "arxiv": "2512.12844",
+    "authors": [
+      "Yunpeng Xu",
+      "Wenge Guo",
+      "Zhi Wei"
+    ],
+    "doi": null,
+    "id": "http://arxiv.org/abs/2512.12844v2",
+    "published": "2025-12-14T21:18:28Z",
+    "status": "OK",
+    "title": "Selective Conformal Risk Control",
+    "updated": "2026-04-27T02:26:44Z"
+  }
+}
