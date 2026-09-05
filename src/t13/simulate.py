@@ -18,6 +18,7 @@ from typing import Dict, List, Optional
 import numpy as np
 
 from . import calib, config as C
+from .joint import JointTimeModel
 from .arrival import DisclosureModel, draw_arrivals
 from .data import load_stream, build_synb2b_features, build_ulb_features
 from .drift import apply_drift
@@ -216,6 +217,12 @@ def _gamma_cdf(age: np.ndarray, shape: float, scale: float, cap) -> np.ndarray:
     back by interpolation, because this runs 320 times per pass over tens of thousands
     of rows and scipy's own cdf is far too slow for that.
     """
+    if scale is None or not np.isfinite(scale) or scale <= 0.0:
+        # A degenerate scale means "no delay": the label is already here. scipy
+        # returns NaN, a NaN propensity fails the pi_floor test, and the entire
+        # review channel is then silently deleted from the calibration set.
+        a = np.asarray(age, dtype=float)
+        return np.where(a >= 0.0, 1.0, 0.0)
     key = (round(shape, 6), round(scale, 6), None if cap is None else round(cap, 6))
     tab = _GCDF_CACHE.get(key)
     if tab is None:
@@ -243,7 +250,8 @@ def _predict_pd(m_obs, m_r, zeta, score, fallback: float) -> np.ndarray:
 def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                delay_scale_mult: float = 1.0, disclose_mult: float = 1.0,
                check_invariants: bool = True, oracle_pd: bool = False,
-               keep_arrays: bool = False) -> dict:
+               keep_arrays: bool = False, cohort_aligned: bool = True,
+               cohort_fallback: bool = True, joint_mode: str = "") -> dict:
     n, n0 = ctx.n, ctx.n_train
     grid, G = ctx.grid, len(ctx.grid)
     scores, days, y, amount = ctx.scores, ctx.days, ctx.y, ctx.amount
@@ -274,6 +282,11 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
     slots_left = slots_per_block
     block_start = n0
 
+    _cohort_gap = float("nan")
+    m_joint = None
+    _n_refit = _n_fallback = _n_thin = _n_zero = _n_abstain = 0
+    _r_rows: List[int] = []
+    _q_rows: List[int] = []
     infeasible_flags: List[int] = []
     oracle_flags: List[int] = []
     oracle_flags_exh: List[int] = []
@@ -409,14 +422,69 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                 bins_all = calib.bin_of(grid, scores[idx_all])
                 ob_a = np.where(has_label, obs[idx_all], 0.0)
 
-                if disc_refit_countdown <= 0:
-                    mature = idx_all[(ch_a == CH_LEDGER) & (age_a >= C.MATURITY_DAYS
-                                                            * delay_scale_mult)]
+                if disc_refit_countdown <= 0 and not oracle_pd:
+                    # Cohort alignment. p_d = q/r only holds if both factors describe
+                    # the same population. q can only be fitted on releases whose
+                    # 180-day ledger window has closed, so it necessarily describes
+                    # transactions at least that old. An analyst adjudicates in hours,
+                    # so the obvious r cohort is today's. Dividing one by the other is
+                    # fine while r is stationary and wrong the moment it drifts, which
+                    # is the regime this paper is about. Both are therefore drawn from
+                    # the same transaction-time band H_t = [t - W, t - M].
+                    _mat = C.MATURITY_DAYS * delay_scale_mult
+                    mature = idx_all[(ch_a == CH_LEDGER) & (age_a >= _mat)]
                     ch_l = channel[idx]
                     expl = idx[ch_l == CH_EXPLORE]
-                    truth = idx[(ch_l == CH_EXPLORE) | (ch_l == CH_REVIEW)]
-                    m_obs, m_r, _, _ = _fit_disclosure(ctx, pol, mature, truth,
-                                                       len(expl), obs)
+                    _adj = idx[(ch_l == CH_EXPLORE) | (ch_l == CH_REVIEW)]
+                    if cohort_aligned:
+                        truth = _adj[(d - days[_adj]) >= _mat]
+                        n_strict = len(truth)
+                        if n_strict < 80:
+                            _n_thin += 1
+                            if cohort_fallback:
+                                # widening keeps the fit alive and destroys the very
+                                # alignment it was meant to enforce; counted, not hidden
+                                truth = _adj[(d - days[_adj]) >= 0.5 * _mat]
+                                _n_fallback += 1
+                            else:
+                                _n_abstain += 1     # strict mode: refuse to fit
+                        if n_strict == 0:
+                            _n_zero += 1
+                    else:
+                        truth = _adj
+                    _n_refit += 1
+                    _r_rows.append(len(truth)); _q_rows.append(len(mature))
+                    if len(mature) and len(truth):
+                        _cohort_gap = float(abs(np.mean(d - days[mature])
+                                                - np.mean(d - days[truth])))
+                    if joint_mode:
+                        _elig = idx_all[ch_a >= 0]
+                        _arr = arrival[_elig] <= d
+                        # kind 0 adjudicated, 1 released, 2 no contribution. An
+                        # analyst verdict still in flight is not a label the estimator
+                        # is allowed to read, so those rows drop out entirely rather
+                        # than entering as a truthful zero.
+                        _kind = np.where(channel[_elig] == CH_LEDGER, 1,
+                                         np.where(_arr, 0, 2))
+                        # obs is the reported label. On the ledger it is 1 only for a
+                        # fraud that disclosed, so gating on arrival makes this read
+                        # "a signal has surfaced by now"; a disclosure still in the
+                        # post is correctly counted as no signal yet, not dropped.
+                        _surf = (obs[_elig] > 0.5) & _arr
+                        _yobs = np.where(_kind == 0, np.clip(obs[_elig], 0.0, 1.0), 0.0)
+                        _jm = JointTimeModel(
+                            disclosure=joint_mode,
+                            delay_scale=C.DISCLOSE_DELAY_SCALE * delay_scale_mult,
+                            delay_cap=C.DISCLOSE_DELAY_CAP * delay_scale_mult,
+                        ).fit(ctx.zeta[_elig], scores[_elig], days[_elig], _kind,
+                              _yobs, d - days[_elig], _surf)
+                        m_joint = _jm if _jm.converged else None
+                        m_obs = m_r = None
+                    elif cohort_aligned and not cohort_fallback and len(truth) < 80:
+                        m_obs, m_r = None, None      # insufficient support: abstain
+                    else:
+                        m_obs, m_r, _, _ = _fit_disclosure(ctx, pol, mature, truth,
+                                                           len(expl), obs)
                     if m_obs is None and len(truth) > 0 and len(mature) > 0:
                         r_ex = float(np.mean(y[truth]))
                         r_ob = float(np.mean(obs[mature]))
@@ -427,6 +495,11 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
 
                 if oracle_pd:
                     pd_hat = p_disc_eff[idx_all]
+                elif joint_mode:
+                    pd_hat = (m_joint.predict_pd(ctx.zeta[idx_all], scores[idx_all],
+                                                 days[idx_all])
+                              if m_joint is not None
+                              else np.full(len(idx_all), pd_fallback))
                 else:
                     pd_hat = _predict_pd(m_obs, m_r, ctx.zeta[idx_all],
                                          scores[idx_all], pd_fallback)
@@ -577,6 +650,7 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                 "trim_share": _trim_share, "trim_fraud_share": _trim_fraud,
                 "ess": _ess, "w_max_norm": _wmax, "w_top1_share": _top1,
                 "pd_mae": _pdm, "pd_brier": _pdb, "pd_clip_share": _pdclip,
+                "cohort_gap_days": _cohort_gap,
             })
         infeasible_flags.append(infeasible)
         oracle_flags.append(oracle_infeasible)
@@ -591,6 +665,22 @@ def run_policy(ctx: StreamContext, method: str, pol: C.PolicyConfig,
                          delay_scale_mult, disclose_mult, oracle_pd,
                          oracle_flags, flag_days, flag_etrue,
                          oracle_flags_exh, mono_viols)
+    # nuisance-support diagnostics: how often the aligned cohort was too thin, and
+    # how many analyst rows the r fit actually had. Without these the effect of
+    # alignment on the ratio can only be guessed at.
+    summary.update({
+        "cohort_aligned": bool(cohort_aligned),
+        "cohort_fallback": bool(cohort_fallback),
+        "joint_mode": joint_mode or None,
+        "nuis_refits": _n_refit,
+        "nuis_fallback_share": (_n_fallback / _n_refit) if _n_refit else None,
+        "nuis_thin_share": (_n_thin / _n_refit) if _n_refit else None,
+        "nuis_zero_share": (_n_zero / _n_refit) if _n_refit else None,
+        "nuis_abstain_share": (_n_abstain / _n_refit) if _n_refit else None,
+        "nuis_r_rows_median": float(np.median(_r_rows)) if _r_rows else None,
+        "nuis_r_rows_min": float(np.min(_r_rows)) if _r_rows else None,
+        "nuis_q_rows_median": float(np.median(_q_rows)) if _q_rows else None,
+    })
     if keep_arrays:
         # evaluation-stream slices, for the invariant tests. Never serialised.
         sl2 = slice(n0, n)
@@ -638,7 +728,8 @@ def _diagnostics(comp_series) -> dict:
     for src, dst in (("ess", "ess"), ("w_max_norm", "w_max_norm"),
                      ("w_top1_share", "w_top1_share"), ("trim_share", "trim_share"),
                      ("trim_fraud_share", "trim_fraud_share"), ("pd_mae", "pd_mae"),
-                     ("pd_brier", "pd_brier"), ("pd_clip_share", "pd_clip_share")):
+                     ("pd_brier", "pd_brier"), ("pd_clip_share", "pd_clip_share"),
+                     ("cohort_gap_days", "cohort_gap_days")):
         v = col(src)
         v = v[np.isfinite(v)]
         if len(v):

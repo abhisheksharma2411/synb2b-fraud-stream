@@ -583,3 +583,53 @@ cannot be read as a set chosen after seeing which seeds were convenient. No seed
 dropped. Every method sees the same stream under a given seed, so the method contrasts
 stay paired. This replaces five-replicate intervals that the paper had to label
 exploratory.
+
+---
+
+## K. The reframe
+
+**D-53. The paper became a negative result, because the evidence made it one.** Twenty
+paired seeds, four estimators, and no deployable variant is calibrated. The best is the
+temporally mismatched ratio at 0.877, still 0.123 from calibrated. Every principled
+correction is worse on paired differences over all twenty seeds: cohort matching costs
+0.047 [0.035, 0.058] on 20 of 20, strict matching 0.383, a joint censored likelihood
+0.147. An oracle propensity still leaves 0.086, so this is not only propensity error.
+The title now says so: *Identifiable but Not Estimable*.
+
+**D-54. Four defects invalidated claims that were in the submitted PDF.**
+
+1. *The delay-zero negative result was a NaN artefact.* A zero Gamma scale returned NaN
+   for every arrival probability, which failed the `pi_floor` test and silently deleted
+   the entire review channel. The paper reported that as "removing the lag made the
+   policy louder". With the guard in place the result reverses: infeasibility 0.51 at
+   zero delay against 0.78 at the true delay. The claim is deleted.
+2. *The headline ratio was measured against the wrong truth.* `e_true` was computed on
+   the ledger channel while `e_t` came from a curve over every channel below
+   `tau_lo` - two different estimands. Every published ratio rested on it.
+3. *ULB's propensity was never fitted.* Its 45000-row window cap spanned 110.9 days
+   against a 180-day maturity horizon, so no matured release could ever enter and M5
+   ran on a constant for the whole stream. The cap is now per stream. Every ULB number
+   changed, and the ordering inverted.
+4. *The correction is largely a constant.* On the invoice stream `q/r` is fitted on 18%
+   of updates and falls back to a constant on the rest; on the card stream it was 0%.
+   A bare constant 0.45 scores better on `p_d` error than the fitted model.
+
+**D-55. Exploration buys identification and nothing measurable beyond it.** At twenty
+seeds the estimator reads 0.8288 with no exploration and 0.8286 at the 0.120 operating
+share. The earlier "gain of 0.010" was a five-seed artefact. Raising disclosure does not
+help either: at a multiplier of 2.4 the ratio degrades to 0.6788 while infeasibility
+climbs to 0.7794, so the shortage is not of surfaced frauds.
+
+**D-56. What survives.** The feasibility frontier, the identification result, and the
+infeasibility flag, which reaches precision 0.924 and recall 0.840 for balanced
+accuracy 0.898 against an oracle that searches every admissible threshold and assumes
+no monotonicity. (A2) does fail here - 0.598 of admissible steps run downhill - and the
+two oracles still agree on 1.000 of scored windows. Cohort matching helps the flag by
+0.013 on 16 of 20 seeds while hurting the estimate: calibrating a risk estimate and
+detecting infeasibility are different jobs.
+
+**D-57. The claim checker now also refuses numbers the paper does not print.** It
+caught seven stale values in the rewrite, two of which contradicted a table on the same
+page, and three structural faults no numeric gate could see: the estimator the prose
+reports had no row in Table I, "five seeds" survived in four places while the abstract
+said twenty, and a figure caption named the wrong variant.

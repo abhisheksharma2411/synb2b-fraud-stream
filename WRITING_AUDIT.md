@@ -23,47 +23,46 @@ paper's own writing rules. None of them were relaxed to obtain a pass.
 
 ## 1. Sentence-length distribution
 
-- sentences: 190
-- mean length: 20.41 words
-- standard deviation: 11.78 words  (gate: >= 11)
-- min 3, max 60
+- sentences: 195
+- mean length: 19.84 words
+- standard deviation: 11.16 words  (gate: >= 11)
+- min 3, max 57
 
 | words | count |
 |---|---|
-| 0-4 | 7 |
-| 5-9 | 30 |
-| 10-14 | 32 |
-| 15-19 | 25 |
-| 20-24 | 30 |
-| 25-29 | 30 |
-| 30-34 | 17 |
-| 35-39 | 7 |
-| 40-44 | 4 |
-| 45-49 | 2 |
+| 0-4 | 6 |
+| 5-9 | 39 |
+| 10-14 | 30 |
+| 15-19 | 23 |
+| 20-24 | 29 |
+| 25-29 | 32 |
+| 30-34 | 19 |
+| 35-39 | 8 |
+| 40-44 | 3 |
+| 45-49 | 3 |
 | 50-54 | 2 |
-| 55-59 | 3 |
-| 60-64 | 1 |
+| 55-59 | 1 |
 
 ## 2. Short and long sentences
 
-- under 8 words: 29 (gate: >= 12)
-- over 35 words: 16 (gate: >= 8)
+- under 8 words: 31 (gate: >= 12)
+- over 35 words: 14 (gate: >= 8)
 
   - short: "abstract Fraud scores are not decisions."
+  - short: "An oracle propensity still leaves 0.086."
   - short: "A fraud model returns a number."
   - short: "Nobody pays a number."
   - short: "The policy chooses its own labels."
   - short: "This is not staleness."
-  - short: "Four things follow."
-  - long: "It does treat labels as selective and delayed, and shows action risk is unidentified without restricting label..."
-  - long: "Delayed and partial fraud feedback were documented a decade ago , and recent work formalises the limits that d..."
+  - long: "The best deployable one misses the ratio of true to estimated risk by 0.123, and every principled correction m..."
+  - long: "Gibbs and Cand es replace the fixed quantile with an online recursion that adapts under shift and then under a..."
+  - long: "Delayed and partial fraud feedback were documented a decade ago , and recent work formalises the limits delaye..."
   - long: "On that path the ledger shows only the product MATH , so MATH is recovered as a ratio: MATH fitted on matured ..."
-  - long: "Given MATH , the upper threshold MATH is placed by an online quantile so the band carries MATH of traffic, whi..."
 
 ## 3. Paragraph rhythm
 
 - paragraphs: 45
-- sentence counts in order: [10, 4, 3, 6, 3, 5, 4, 5, 4, 3, 4, 3, 6, 5, 6, 7, 6, 1, 2, 4, 3, 5, 1, 4, 3, 3, 4, 2, 3, 2, 3, 4, 10, 4, 8, 4, 2, 7, 2, 2, 8, 2, 5, 2, 6]
+- sentence counts in order: [11, 4, 3, 6, 3, 5, 3, 4, 3, 3, 4, 3, 7, 5, 6, 7, 6, 1, 6, 4, 3, 5, 1, 4, 3, 3, 4, 2, 3, 2, 3, 4, 10, 4, 8, 4, 6, 3, 2, 4, 8, 2, 5, 2, 6]
 - runs of three consecutive equal counts: none
 
 ## 4. Banned vocabulary
@@ -73,12 +72,12 @@ None found. Zero occurrences of every banned word and phrase.
 ## 5. Punctuation and self-reference caps
 
 - em-dashes: 0 (cap 5)
-- semicolons: 4 (cap 8)
+- semicolons: 3 (cap 8)
 - "we propose/present/introduce": 0 (cap 3)
 
 ## 6. Conjunction openers
 
-- sentences opening with But/So/Yet/And/Then: 7 (gate: >= 6)
+- sentences opening with But/So/Yet/And/Then: 8 (gate: >= 6)
 
 ## 7. Numeric traceability
 

@@ -77,10 +77,15 @@ def main():
     U = R["methods"]["ulb"]
     fb = R["stream_facts"]["synb2b"]
     fu = R["stream_facts"]["ulb"]
-    order = ["M0", "M1", "M2", "M3", "M4", "M5", "M5_oracle"]
-    names = {"M0": "M0 \\textsc{static}", "M1": "M1 \\textsc{conf-fixed}",
+    order = ["M0", "M1", "M2", "M3", "M4", "M5_legacy", "M5",
+             "M5_strictmatch", "M5_joint_static", "M5_oracle"]
+    names = {"M5_legacy": r"\textbf{M5 \textsc{-iap}}",
+             "M5_strictmatch": r"\quad M5, strict match",
+             "M5_joint_static": r"\quad M5, joint likelihood",
+             "M0": "M0 \\textsc{static}", "M1": "M1 \\textsc{conf-fixed}",
              "M2": "M2 \\textsc{cost-thresh}", "M3": "M3 \\textsc{aci-budget}",
-             "M4": "M4 \\textsc{aci-budget-crc}", "M5": "\\textbf{M5 \\textsc{-iap}}",
+             "M4": "M4 \\textsc{aci-budget-crc}",
+             "M5": r"\quad M5, cohort-matched",
              "M5_oracle": "\\quad M5, oracle $p_d$"}
 
     # ---- Table I: methods on SynB2B -------------------------------------

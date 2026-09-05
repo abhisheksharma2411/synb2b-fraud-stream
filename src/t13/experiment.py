@@ -38,6 +38,7 @@ CI_METRICS = [
     "exh_flag_precision", "exh_flag_recall", "exh_flag_specificity",
     "exh_flag_balanced_acc", "exh_oracle_infeasible_rate", "oracle_agreement",
     "gap_overlap_mean", "gap_overlap_rel", "ess_median", "pd_mae_mean",
+    "cohort_gap_days_mean",
 ]
 
 
@@ -58,6 +59,7 @@ def _flatten(r: dict) -> dict:
         "flag_false_infeasible_rate", "flag_missed_infeasible_rate",
         "risk_when_flagged", "risk_when_not_flagged",
         "flag_delay_covariate", "flag_delay_concept", "flag_delay_prior",
+        "cohort_gap_days_mean",
         # assumption-free (exhaustive) oracle + how much A2 matters
         "exh_flag_precision", "exh_flag_recall", "exh_flag_specificity", "exh_flag_balanced_acc", "exh_oracle_infeasible_rate", "exh_flag_n_scored", "exh_flag_tp", "exh_flag_fp", "exh_flag_fn", "exh_flag_tn", "mono_violation_mean", "oracle_agreement",
         # estimand gap, weight information, propensity error
@@ -97,7 +99,11 @@ def aggregate(runs: List[dict], label: str, extra: dict,
         else:
             m, lo, hi = float(np.mean(num)), None, None
         agg[k] = {"mean": m, "ci_lo": lo, "ci_hi": hi, "n": len(num),
-                  "sd": float(np.std(num, ddof=1)) if len(num) > 1 else 0.0}
+                  "sd": float(np.std(num, ddof=1)) if len(num) > 1 else 0.0,
+                  # every seed, so paired differences can be computed rather than
+                  # inferred from whether two marginal intervals happen to overlap
+                  "per_seed": [None if (v is None or not np.isfinite(v)) else float(v)
+                               for v in vals]}
     # per-topology miss rates, averaged over seeds
     topo = {}
     for t in C.TOPOLOGIES + ["D_drift_induced"]:
@@ -151,7 +157,19 @@ def method_comparison(streams, seeds, small=False, log=print) -> dict:
     out = {}
     # M5_oracle is the proposed method with the disclosure propensity handed to it:
     # an upper bound on what the correction can buy if the model were error-free.
-    variants = [(m, False) for m in C.METHODS] + [("M5", True)]
+    # M5_oracle hands the true disclosure propensity to the proposed method, bounding
+    # what the correction can buy. M5_misaligned is the estimator as it stood before
+    # cohort alignment: q fitted on releases at least 180 days old, r on analyst rows
+    # from hours ago. It is kept as a measured ablation rather than deleted, because
+    # the size of that error is the argument for aligning them.
+    # (method, oracle_pd, cohort_aligned, cohort_fallback)
+    # (method, oracle_pd, cohort_aligned, cohort_fallback, joint_mode)
+    variants = ([(m, False, True, True, "") for m in C.METHODS]
+                + [("M5", True, True, True, ""),      # oracle p_d, diagnostic only
+                   ("M5", False, False, True, ""),    # legacy: mismatched cohorts
+                   ("M5", False, True, False, ""),    # strict match, abstains when thin
+                   ("M5", False, True, True, "static"),   # joint likelihood
+                   ("M5", False, True, True, "slow")])
     for stream in streams:
         pol = C.policy_for(stream)
         collected: Dict[str, list] = {}
@@ -160,17 +178,24 @@ def method_comparison(streams, seeds, small=False, log=print) -> dict:
             ctx = prepare_stream(stream, seed=sd, small=small)
             log(f"  {stream}/seed{sd} prepared in {time.time() - t0:.1f}s "
                 f"(n={ctx.n}, pos={int(ctx.y.sum())})")
-            for method, oracle in variants:
-                key = "M5_oracle" if oracle else method
+            for method, oracle, aligned, fb, jm in variants:
+                key = ("M5_oracle" if oracle
+                       else f"M5_joint_{jm}" if jm
+                       else "M5_legacy" if not aligned
+                       else method if fb else "M5_strictmatch")
                 t1 = time.time()
-                r = run_policy(ctx, method, pol, oracle_pd=oracle)
+                r = run_policy(ctx, method, pol, oracle_pd=oracle,
+                               cohort_aligned=aligned, cohort_fallback=fb,
+                               joint_mode=jm)
                 collected.setdefault(key, []).append(r)
                 log(f"    {key:10s} {time.time() - t1:5.1f}s FOR={r['for_overall']:.6f}")
         out[stream] = {
             key: aggregate(runs, f"{stream}/{key}",
                            {"stream": stream, "method": key,
                             "method_label": C.METHOD_LABELS.get(
-                                key, "M5 with oracle propensity"),
+                                key, {"M5_oracle": "M5 with oracle propensity",
+                                      "M5_misaligned": "M5, mismatched cohorts"}
+                                .get(key, key)),
                             **pol.as_dict()},
                            with_series=True)
             for key, runs in collected.items()

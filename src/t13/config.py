@@ -176,8 +176,20 @@ TOPOLOGIES = [
 STREAM_ALPHA = {"synb2b": 0.0124, "ulb": 0.00093}
 
 
+# The calibration window is capped in both days and rows. On a dense stream the row
+# cap binds first, and if the resulting span is shorter than the 180-day reconciliation
+# horizon then no matured release row can ever enter the window and the disclosure
+# model can never be fitted at all. ULB runs at 405.9 rows/day, so the shared 45000-row
+# cap gave a 110.9-day window and M5 silently fell back to a constant propensity for
+# the entire stream. The cap is therefore set per stream, wide enough to hold the
+# maturity horizon plus room to estimate in.
+WINDOW_MAX_N = {"synb2b": 45000, "ulb": 110000}
+
+
 def policy_for(stream: str, **overrides) -> "PolicyConfig":
     kw = {"alpha": STREAM_ALPHA.get(stream, 0.0155)}
+    if stream in WINDOW_MAX_N:
+        kw["window_max_n"] = WINDOW_MAX_N[stream]
     kw.update(overrides)
     return PolicyConfig(**kw)
 
